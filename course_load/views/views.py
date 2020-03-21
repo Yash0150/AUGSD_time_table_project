@@ -3,9 +3,12 @@ from django.shortcuts import render
 from django.views import generic
  
 from course_load.utils import get_department_cdc_list, get_department_elective_list, get_department_faculty_list, get_faculty_list
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
+@method_decorator(login_required, name='dispatch')
 class DashboardView(generic.TemplateView):
-    template_name = 'dashboard.html'
+    template_name = 'course_load/dashboard.html'
     context = {}
 
     def get(self, request, *args, **kwargs):
@@ -13,6 +16,7 @@ class DashboardView(generic.TemplateView):
         self.context = {}
         return render(request, self.template_name, self.context)
 
+@login_required
 def get_data(request, *args, **kwargs):
     response = {}
     dept = 0
