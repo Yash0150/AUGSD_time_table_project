@@ -5,4 +5,5 @@ from course_load.views import (views)
 urlpatterns = [
     path('dashboard/', views.DashboardView.as_view()),
     path('get-data/', views.get_data),
+    path('submit-data/', views.submit_data),
 ]
