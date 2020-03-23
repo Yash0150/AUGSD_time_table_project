@@ -11,6 +11,9 @@ from course_load.models import Course, Instructor, CourseInstructor
 
 from django.shortcuts import get_object_or_404
 
+import csv
+from django.http import HttpResponse
+
 # Only for testing
 from django.views.decorators.csrf import csrf_exempt
 
@@ -51,7 +54,6 @@ def get_data(request, *args, **kwargs):
 @csrf_exempt
 def submit_data(request, *args, **kwargs):
     response = {}
-    # dept = request.user.userprofile.department
     try:
         body_unicode = request.body.decode('utf-8')
         data = json.loads(body_unicode)
@@ -101,3 +103,54 @@ def submit_data(request, *args, **kwargs):
         response['error'] = True
         response['message'] = str(e)
     return JsonResponse(response, safe=False)
+
+@login_required
+def download_course_wise(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="Course Load course-wise.csv"'
+    writer = csv.writer(response)
+
+    writer.writerow(['Course Code', 'Course Name', 'IC'])
+    writer.writerow(['Instructor Name', 'L', 'T', 'P'])
+    course_list = CourseInstructor.objects.filter().values('course').distinct()
+    for course in course_list:
+        writer.writerow([])
+        writer.writerow([])
+        course = Course.objects.get(code = course['course'])
+        writer.writerow([course.code, course.name, course.ic])
+        writer.writerow([])
+        instructor_list = CourseInstructor.objects.filter(course = course).values('instructor').distinct()
+        for instructor in instructor_list:
+            instructor = Instructor.objects.get(psrn_or_id = instructor['instructor'])
+            l_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'L').count()
+            t_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'T').count()
+            p_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'P').count()
+            writer.writerow([instructor.name, l_count, t_count, p_count])    
+    return response
+
+@login_required
+def download_instructor_wise(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="Course Load instructor-wise.csv"'
+    writer = csv.writer(response)
+
+    writer.writerow(['Instructor Name', 'Deptartment'])
+    writer.writerow(['Course Code', 'Course Name', 'L', 'T', 'P', 'Role'])
+    instructor_list = CourseInstructor.objects.filter().values('instructor').distinct()
+    for instructor in instructor_list:
+        writer.writerow([])
+        writer.writerow([])
+        instructor = Instructor.objects.get(psrn_or_id = instructor['instructor'])
+        writer.writerow([instructor.name, instructor.department])
+        writer.writerow([])
+        course_list = CourseInstructor.objects.filter(instructor = instructor).values('course').distinct()
+        for course in course_list:
+            course = Course.objects.get(code = course['course'])
+            l_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'L').count()
+            t_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'T').count()
+            p_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'P').count()
+            role = 'I'
+            if course.ic == instructor:
+                role = 'IC'
+            writer.writerow([course.code, course.name, l_count, t_count, p_count, role])
+    return response
