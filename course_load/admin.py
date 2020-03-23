@@ -4,6 +4,6 @@ from .models import *
 # Register your models here.
 admin.site.register(Department)
 admin.site.register(UserProfile)
-admin.site.register(Faculty)
+admin.site.register(Instructor)
 admin.site.register(Course)
-admin.site.register(CourseFaculty)
+admin.site.register(CourseInstructor)

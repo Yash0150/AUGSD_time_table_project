@@ -20,8 +20,6 @@ def get_department_cdc_list(dept):
         if(df['dept'][i]==dept):
             Lst.append([df['course no'][i],df['course title'][i]])
 
-    Lst.sort()
-    Lst = list(Lst for Lst,_ in itertools.groupby(Lst))
     return Lst
 
 def get_department_elective_list(dept):
@@ -58,9 +56,10 @@ def get_department_elective_list(dept):
     for i in range(4, dfe.shape[0]+1):
         if(Dict[dfe['Disc'][i]]==dept):
             Lst.append([dfe['Course No'][i],dfe['Course Title'][i]])
+
     return Lst
 
-def get_department_faculty_list(dept):
+def get_department_instructor_list(dept):
     dff= pd.read_excel('time table sw data-4 feb 20.xlsx','3PSRN')
     Lst=[]
     for i in range(0, 176):
@@ -68,22 +67,22 @@ def get_department_faculty_list(dept):
             Lst.append([dff['name'][i],dff['PSRN'][i]])
     return Lst
 
-def get_faculty_list():
-    dff= pd.read_excel('time table sw data-4 feb 20.xlsx','3PSRN')
-    Lst=[]
-    for i in range(1,176):
-        Lst.append([dff['name'][i],dff['PSRN'][i]])
-    return Lst
-
-def get_phd_scholar_list(dept):
+def get_department_phd_student_list(dept):
     dfs= pd.read_excel('time table sw data-4 feb 20.xlsx','3STUDENTS')
     Lst=[]
     if(dept=='HSS' or dept=='HUM'):
-        for i in range(1, 420):
-            if(dfs['discipline']=='HSS' or dfs['discipline']=='HUM'):
+        for i in range(0, 420):
+            if(dfs['discipline'][i]=='HSS' or dfs['discipline'][i]=='HUM'):
                 Lst.append([dfs['name'][i],dfs['IDNO'][i]])
     else:
-        for i in range(1, 420):
+        for i in range(0, 420):
             if(dfs['discipline'][i][0:3]==dept[0:3]):
                 Lst.append([dfs['name'][i],dfs['IDNO'][i]])
+    return Lst
+
+def get_instructor_list():
+    dff= pd.read_excel('time table sw data-4 feb 20.xlsx','3PSRN')
+    Lst=[]
+    for i in range(0,176):
+        Lst.append([dff['name'][i],dff['PSRN'][i]])
     return Lst
