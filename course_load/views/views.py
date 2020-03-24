@@ -50,8 +50,8 @@ def get_data(request, *args, **kwargs):
         response['message'] = str(e)
     return JsonResponse(response, safe=False)
 
-# @login_required
-@csrf_exempt
+@login_required
+# @csrf_exempt
 def submit_data(request, *args, **kwargs):
     response = {}
     try:
