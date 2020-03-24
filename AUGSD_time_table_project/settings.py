@@ -127,8 +127,8 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-    # os.path.join(BASE_DIR, 'client/build/static'),
+    # os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'client/build/static'),
 ]
 
 LOGIN_REDIRECT_URL = '/course-load/dashboard/'
