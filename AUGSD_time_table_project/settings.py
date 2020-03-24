@@ -123,9 +123,10 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL = '/course-load/dashboard/'
-LOGOUT_REDIRECT_URL = '/accounts/login'
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'client/build/static'),
+    os.path.join(BASE_DIR, 'static'),
 ]
+
+LOGIN_REDIRECT_URL = '/course-load/dashboard/'
+LOGOUT_REDIRECT_URL = '/accounts/login'
