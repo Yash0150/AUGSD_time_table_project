@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 def create_super_user():
     try:
         (super_user, created) = User.objects.get_or_create(username="admin", is_superuser=True)
-        super_user.set_password('password')
+        super_user.set_password('adminpassword')
         super_user.is_staff = True
         super_user.is_admin = True
         super_user.is_superuser = True
