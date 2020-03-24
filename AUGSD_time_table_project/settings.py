@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,12 +21,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ufwok@@f6ul6s70hbn$v+7es)42bwqi&_l#t+o=n9f(1f&e8g+'
+# SECRET_KEY = 'ufwok@@f6ul6s70hbn$v+7es)42bwqi&_l#t+o=n9f(1f&e8g+'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (os.environ.get('DEBUG_VALUE') == 'True')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'augsd-course-load.herokuapp.com'
+]
 
 
 # Application definition
@@ -120,11 +124,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-
-LOGIN_REDIRECT_URL = '/course-load/dashboard/'
-LOGOUT_REDIRECT_URL = '/accounts/login'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'client/build/static'),
 ]
+
+LOGIN_REDIRECT_URL = '/course-load/dashboard/'
+LOGOUT_REDIRECT_URL = '/accounts/login'
+
+django_heroku.settings(locals())
