@@ -55,7 +55,9 @@ ROOT_URLCONF = 'AUGSD_time_table_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'client/build')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,3 +124,7 @@ STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/course-load/dashboard/'
 LOGOUT_REDIRECT_URL = '/accounts/login'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'client/build/static'),
+]

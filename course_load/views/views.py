@@ -17,15 +17,15 @@ from django.http import HttpResponse
 # Only for testing
 from django.views.decorators.csrf import csrf_exempt
 
-@method_decorator(login_required, name='dispatch')
-class DashboardView(generic.TemplateView):
-    template_name = 'course_load/dashboard.html'
-    context = {}
+# @method_decorator(login_required, name='dispatch')
+# class DashboardView(generic.TemplateView):
+#     template_name = 'course_load/dashboard.html'
+#     context = {}
 
-    def get(self, request, *args, **kwargs):
-        # Get required data from utils function and pass it in context
-        self.context = {}
-        return render(request, self.template_name, self.context)
+#     def get(self, request, *args, **kwargs):
+#         # Get required data from utils function and pass it in context
+#         self.context = {}
+#         return render(request, self.template_name, self.context)
 
 @login_required
 def get_data(request, *args, **kwargs):
