@@ -121,3 +121,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/course-load/dashboard/'
+LOGOUT_REDIRECT_URL = '/accounts/login'
