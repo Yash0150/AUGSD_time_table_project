@@ -57,6 +57,7 @@ def submit_data(request, *args, **kwargs):
     try:
         body_unicode = request.body.decode('utf-8')
         data = json.loads(body_unicode)
+        print(data)
         course = Course.objects.filter(code = data['course_code'], course_type = data['course_type'])
         course.update(
             l_count = data['l_count'],
@@ -100,6 +101,7 @@ def submit_data(request, *args, **kwargs):
         response['error'] = False
         response['message'] = 'success'
     except Exception as e:
+        print(e)
         response['error'] = True
         response['message'] = str(e)
     return JsonResponse(response, safe=False)
