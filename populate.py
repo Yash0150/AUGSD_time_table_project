@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 def create_super_user():
     try:
         (super_user, created) = User.objects.get_or_create(username="admin", is_superuser=True)
-        super_user.set_password('password')
+        super_user.set_password('adminpassword')
         super_user.is_staff = True
         super_user.is_admin = True
         super_user.is_superuser = True
@@ -26,7 +26,7 @@ def create_user_profile():
         dept_list = get_department_list()
         for i in dept_list:
             (mUser, created) = User.objects.get_or_create(username = 'hod_'+i)
-            mUser.set_password('password')
+            mUser.set_password('password_'+i)
             mUser.save()
             (dept, created) = Department.objects.get_or_create(code = i, name = i)
             dept.save()
