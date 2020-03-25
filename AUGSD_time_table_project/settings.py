@@ -133,6 +133,7 @@ LOGOUT_REDIRECT_URL = '/accounts/login'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'client/build/static'),
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 django_heroku.settings(locals())
