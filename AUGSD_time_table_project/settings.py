@@ -24,11 +24,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ.get('SECRET_KEY') == 'True')
+DEBUG = (os.environ.get('DEBUG_VALUE') == 'True')
 
 ALLOWED_HOSTS = [
-    'augsd-course-load.herokuapp.com',
-    '127.0.0.1'
+    '127.0.0.1',
+    'augsd-course-load.herokuapp.com'
 ]
 
 
@@ -135,4 +135,4 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'client/build/static'),
 ]
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
