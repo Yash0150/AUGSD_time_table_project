@@ -66,10 +66,26 @@ function App() {
   const handleLogout = async () => {
     window.location.href="/accounts/logout";
   }
+  const handleDownloadCourseWise = async () => {
+    window.location.href="/course-load/download-course-wise";
+  }
+  const handleDownloadInstructorWise = async () => {
+    window.location.href="/course-load/download-instructor-wise";
+  }
   return (
     <div className="App">
       <NavBar handleLogout={handleLogout}>
-            <Button variant="contained" color="secondary" onClick={handleSubmit} style={{marginBottom: 20, marginLeft: 'auto'}}>
+            <Button variant="contained" color="secondary" onClick={handleDownloadCourseWise} style={{marginBottom: 20, marginLeft: '20px'}}>
+              <Typography>
+                Download Course-wise
+              </Typography>
+            </Button>
+            <Button variant="contained" color="secondary" onClick={handleDownloadInstructorWise} style={{marginBottom: 20, marginLeft: '20px'}}>
+              <Typography>
+                Download Instructor-wise
+              </Typography>
+            </Button>
+            <Button variant="contained" color="secondary" onClick={handleSubmit} style={{marginBottom: 20, marginLeft: '20px'}}>
               <Typography>
                 Submit
               </Typography>
