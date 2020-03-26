@@ -22,24 +22,27 @@ from django.views.decorators.csrf import csrf_exempt
 
 @method_decorator(login_required, name='dispatch')
 class DashboardView(generic.TemplateView):
-    # template_name = 'course_load/dashboard.html'
+    template_name = 'course_load/admin-page.html'
+    context = {}
     index_file_path = os.path.join(settings.REACT_APP_DIR, 'build', 'index.html')
 
     def get(self, request, *args, **kwargs):
-        # return render(request, self.template_name, self.context)
-        try:
-            with open(self.index_file_path) as f:
-                return HttpResponse(f.read())
-        except FileNotFoundError:
-            logging.exception('Production build of app not found')
-            return HttpResponse(
-                """
-                This URL is only used when you have built the production
-                version of the app. Visit http://localhost:3000/ instead after
-                running `yarn start` on the frontend/ directory
-                """,
-                status=501,
-            )
+        if request.user.is_superuser:
+            return render(request, self.template_name, self.context)
+        else:
+            try:
+                with open(self.index_file_path) as f:
+                    return HttpResponse(f.read())
+            except FileNotFoundError:
+                logging.exception('Production build of app not found')
+                return HttpResponse(
+                    """
+                    This URL is only used when you have built the production
+                    version of the app. Visit http://localhost:3000/ instead after
+                    running `yarn start` on the frontend/ directory
+                    """,
+                    status=501,
+                )
 
 @login_required
 def get_data(request, *args, **kwargs):
@@ -130,18 +133,19 @@ def download_course_wise(request):
     writer.writerow(['Instructor Name', 'L', 'T', 'P'])
     course_list = CourseInstructor.objects.filter().values('course').distinct()
     for course in course_list:
-        writer.writerow([])
-        writer.writerow([])
         course = Course.objects.get(code = course['course'])
-        writer.writerow([course.code, course.name, course.ic])
-        writer.writerow([])
-        instructor_list = CourseInstructor.objects.filter(course = course).values('instructor').distinct()
-        for instructor in instructor_list:
-            instructor = Instructor.objects.get(psrn_or_id = instructor['instructor'])
-            l_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'L').count()
-            t_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'T').count()
-            p_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'P').count()
-            writer.writerow([instructor.name, l_count, t_count, p_count])    
+        if request.user.is_superuser or course.department == request.user.userprofile.department:
+            writer.writerow([])
+            writer.writerow([])
+            writer.writerow([course.code, course.name, course.ic])
+            writer.writerow([])
+            instructor_list = CourseInstructor.objects.filter(course = course).values('instructor').distinct()
+            for instructor in instructor_list:
+                instructor = Instructor.objects.get(psrn_or_id = instructor['instructor'])
+                l_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'L').count()
+                t_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'T').count()
+                p_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'P').count()
+                writer.writerow([instructor.name, l_count, t_count, p_count])    
     return response
 
 @login_required
@@ -152,14 +156,22 @@ def download_instructor_wise(request):
 
     writer.writerow(['Instructor Name', 'Deptartment'])
     writer.writerow(['Course Code', 'Course Name', 'L', 'T', 'P', 'Role'])
-    instructor_list = CourseInstructor.objects.filter().values('instructor').distinct()
+    instructor_list = None
+    if request.user.is_superuser:
+        instructor_list = CourseInstructor.objects.filter().values('instructor').distinct()
+    else:
+        instructor_list = CourseInstructor.objects.filter(course__department = request.user.userprofile.department).values('instructor').distinct()
     for instructor in instructor_list:
         writer.writerow([])
         writer.writerow([])
         instructor = Instructor.objects.get(psrn_or_id = instructor['instructor'])
         writer.writerow([instructor.name, instructor.department])
         writer.writerow([])
-        course_list = CourseInstructor.objects.filter(instructor = instructor).values('course').distinct()
+        course_list = None
+        if request.user.is_superuser:
+            course_list = CourseInstructor.objects.filter(instructor = instructor).values('course').distinct()
+        else:
+            course_list = CourseInstructor.objects.filter(instructor = instructor, course__department = request.user.userprofile.department).values('course').distinct()
         for course in course_list:
             course = Course.objects.get(code = course['course'])
             l_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'L').count()
