@@ -1,4 +1,6 @@
 import json
+import os
+import logging
 
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -8,6 +10,7 @@ from course_load.utils import get_department_cdc_list, get_department_elective_l
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from course_load.models import Course, Instructor, CourseInstructor
+from django.conf import settings
 
 from django.shortcuts import get_object_or_404
 
@@ -17,15 +20,26 @@ from django.http import HttpResponse
 # Only for testing
 from django.views.decorators.csrf import csrf_exempt
 
-# @method_decorator(login_required, name='dispatch')
-# class DashboardView(generic.TemplateView):
-#     template_name = 'course_load/dashboard.html'
-#     context = {}
+@method_decorator(login_required, name='dispatch')
+class DashboardView(generic.TemplateView):
+    # template_name = 'course_load/dashboard.html'
+    index_file_path = os.path.join(settings.REACT_APP_DIR, 'build', 'index.html')
 
-#     def get(self, request, *args, **kwargs):
-#         # Get required data from utils function and pass it in context
-#         self.context = {}
-#         return render(request, self.template_name, self.context)
+    def get(self, request, *args, **kwargs):
+        # return render(request, self.template_name, self.context)
+        try:
+            with open(self.index_file_path) as f:
+                return HttpResponse(f.read())
+        except FileNotFoundError:
+            logging.exception('Production build of app not found')
+            return HttpResponse(
+                """
+                This URL is only used when you have built the production
+                version of the app. Visit http://localhost:3000/ instead after
+                running `yarn start` on the frontend/ directory
+                """,
+                status=501,
+            )
 
 @login_required
 def get_data(request, *args, **kwargs):

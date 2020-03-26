@@ -1,0 +1,16 @@
+{
+    "name": "augsd-course-load",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "",
+    "author": "Adarsh Nandanwar",
+    "license": "MIT",
+    "private": true,
+    "scripts": {
+      "heroku-prebuild": "NODE_ENV=production cd client/ && yarn install && yarn build && cd .."
+    },
+    "cacheDirectories": [
+      "client/node_modules"
+    ]
+  }
+  
