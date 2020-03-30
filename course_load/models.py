@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 class Department(models.Model):
     code = models.CharField(max_length=10, primary_key=True)
     name = models.CharField(max_length = 100, null = False)
+    comment_file = models.FileField(null = True, blank = False)
 
     def __str__(self):
         return self.name
@@ -34,6 +35,9 @@ class Course(models.Model):
     code = models.CharField(max_length=10, primary_key = True)
     # code = models.CharField(max_length=10, null = False)
     name = models.CharField(max_length = 100, null = False)
+    l_section_count = models.IntegerField(default=0)
+    t_section_count = models.IntegerField(default=0)
+    p_section_count = models.IntegerField(default=0)
     l_count = models.IntegerField(default=0)
     t_count = models.IntegerField(default=0)
     p_count = models.IntegerField(default=0)
@@ -61,10 +65,14 @@ class CourseInstructor(models.Model):
         ('I', 'Independent'),
     )
     section_type = models.CharField(max_length=1, choices=SECTION_TYPES, null = False)
-    COURSE_TYPES = (
-        ('C', 'CDC'),
-        ('E', 'Elective')
-    )
-    course_type = models.CharField(max_length=1, choices=COURSE_TYPES, null = False)
+    # COURSE_TYPES = (
+    #     ('C', 'CDC'),
+    #     ('E', 'Elective')
+    # )
+    # course_type = models.CharField(max_length=1, choices=COURSE_TYPES, null = False)
     course = models.ForeignKey(Course, default=None, on_delete=models.CASCADE)
     instructor = models.ForeignKey(Instructor, default=None, on_delete=models.CASCADE)
+
+class CourseAccessRequested(models.Model):
+    course = models.ForeignKey(Course, null=False, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, null=False, default=None, on_delete=models.CASCADE)

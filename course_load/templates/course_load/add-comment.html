@@ -2,7 +2,7 @@
 {% load static %}
 <html lang="en">
 <head>
-	<title>Admin Page</title>
+	<title>Dashboard: Comment</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
@@ -22,31 +22,21 @@
 	
 	<div class="limiter">
 		<div class="container-login100">
-			<div class="wrap-login100 text-center" style="display: block;">
-				<h1>Admin Page</h1> 
-				<div class="row">
-					<div class="col-6">
-						<h6 class="m-4">Download HOD comments: </h6>
-						<div class="row">
-							{% for itr in comment_files %}
-							<div class="col-3">
-								{{itr.name}}
-							</div>
-							<div class="col-9">
-								<a href="/media/{{itr.comment_file}}">{{itr.comment_file}}</a>
-							</div>
-							{% endfor %}
+			<div class="wrap-login100" style="display: block; padding-top: 5vh;">
+				<div style="padding-bottom: 5vh;">
+					<a href="/course-load/dashboard">Back</a>
+				</div>
+				<div class="text-center">
+					<h3>Upload Comment File</h3>
+					<form class="m-5" action="/course-load/add-comment/" method="post" enctype='multipart/form-data'>
+						{% csrf_token %}
+						<div>Currently uploaded: </div>
+						<a href="/media/{{ uploaded_file }}">{{ uploaded_file }}</a>
+						<div class="m-3">
+							{{ form.comment_file }}
 						</div>
-					</div>
-					<div class="col-6">
-						<h6 class="m-4">Download course load: </h6>
-						<p class="mt-2">
-							<a style="width: 20%; min-width: 150px;" class="btn btn-dark" href="/course-load/download-course-wise">Course-wise</a>
-						</p>
-						<p class="mt-2">
-							<a style="width: 20%; min-width: 150px;" class="btn btn-dark" href="/course-load/download-instructor-wise">Instructor-wise</a>
-						</p>
-					</div>
+						<input class="btn btn-dark" type="submit" value="Submit">
+					</form>
 				</div>
 			</div>
 		</div>
