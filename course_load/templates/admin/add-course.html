@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+	<title>Add Course</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'registration/vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'registration/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'registration/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'registration/css/main.css' %}">
+<!--===============================================================================================-->
+</head>
+<body>
+	{% load crispy_forms_tags %}
+	
+    <nav class="navbar navbar-light bg-light " style = "position: fixed; top:0; width:100%;">
+        <a class="nav-link ml-auto" href="/accounts/logout">Logout</a>
+    </nav>
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100" style="display: block; padding-top: 5vh;">
+				<div style="padding-bottom: 5vh;">
+					<a href="/course-load/dashboard">Back</a>
+				</div>
+				<div class="text-center">
+					<h1>Add Course</h1> 
+					<div class="col-8" style="margin: auto;">
+						<form class="m-5" action="/add-course/" method="post">
+							{% csrf_token %}
+							<table>
+							{{form|crispy}}
+							</table>
+							<input class="btn btn-dark" type="submit" value="Submit">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+
+	
+<!--===============================================================================================-->	
+	<script src="{% static 'registration/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'registration/vendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'registration/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'registration/vendor/select2/select2.min.js' %}"></script>
+
+</body>
+</html>
