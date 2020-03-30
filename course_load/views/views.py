@@ -41,7 +41,6 @@ class DashboardView(generic.TemplateView):
                     'name': department.name,
                     'comment_file': department.comment_file
                 })
-            print(context)
             return render(request, self.template_name, context)
         else:
             try:
@@ -166,7 +165,6 @@ def request_course_access(request, *args, **kwargs):
     try:
         body_unicode = request.body.decode('utf-8')
         data = json.loads(body_unicode)
-        print(data)
         course = Course.objects.get(code = data['course_code'], course_type = data['course_type'])
         course, created = CourseAccessRequested.objects.get_or_create(course = course, department = request.user.userprofile.department)
         
@@ -185,7 +183,6 @@ def submit_data(request, *args, **kwargs):
     try:
         body_unicode = request.body.decode('utf-8')
         data = json.loads(body_unicode)
-        print(data)
         course = Course.objects.filter(code = data['course_code'], course_type = data['course_type'])
         course.update(
             l_section_count = data['l_section_count'],
