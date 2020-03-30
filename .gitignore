@@ -1,3 +1,9 @@
+# exclude mediafiles
+mediafiles/*
+
+# exception to the rule
+!mediafiles/.gitkeep 
+
 # Mac
 .DS_Store
 
