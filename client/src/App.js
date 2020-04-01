@@ -91,7 +91,7 @@ function App() {
             <br/>
             <Button variant="contained" color="secondary" onClick={handleFileAdd} style={{marginBottom: 20, marginLeft: '20px'}}>
               <Typography>
-                Add a file
+                Upload Comment File
               </Typography>
             </Button>
             <br/>
