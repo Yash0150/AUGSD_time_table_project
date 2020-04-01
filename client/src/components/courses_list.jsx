@@ -130,7 +130,7 @@ export default function SimpleTabs(props) {
     props.setState(res.data.data);
   }
 
-  const handleClick = (course) =>{
+  const handleClick = async (course) =>{
       props.setSelectedCourse(course.name);
       let course_type;
       if(value == 0)
@@ -138,6 +138,9 @@ export default function SimpleTabs(props) {
       else
       course_type = 'E'
       props.setCourseInfo({...props.courseInfo,course_type,course_code:course.code});
+
+      const res = await axios.post('/course-load/get-course-data/',{course_type,course_code});
+      props.setCourseInfo({...props.courseInfo,...res.data});
   }
 
   const getCourseList = (courses) => {
@@ -172,7 +175,7 @@ export default function SimpleTabs(props) {
       </TabPanel>
       <TabPanel value={value} index={2}>
           <Autocomplete
-                options={props.state.other_cdc_list}
+                options={props.state.other_cdc_list.sort(sortFunction)}
                 getOptionLabel={option =>  `${option.code} (${option.name})`}
                 style={styles.text_field}
                 label="Other Department's CDC"
@@ -181,7 +184,7 @@ export default function SimpleTabs(props) {
                 onChange={(event,value) => handleNewCDC_change(event,value)}
                 />
                 <Autocomplete
-                options={props.state.other_elective_list}
+                options={props.state.other_elective_list.sort(sortFunction)}
                 getOptionLabel={option =>  `${option.code} (${option.name})`}
                 style={styles.text_field}
                 label="Other Department's Electives"
