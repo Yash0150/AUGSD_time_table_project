@@ -86,7 +86,7 @@ export default function SimpleTabs(props) {
   const Electives = [...props.state.department_elective_list,...props.state.requested_elective_list];
 
   const sortFunction = (a, b) => {
-    return a.name.localeCompare(b.name);
+    return a.code.localeCompare(b.code);
   }
 
   Electives.sort(sortFunction);
@@ -104,7 +104,7 @@ export default function SimpleTabs(props) {
 
     if(extraCDC){
       try{
-        const res = await axios.post('/course-load/request-course-access',{
+        const res = await axios.post('/course-load/request-course-access/',{
           course_code: extraCDC.code,
           course_type: 'C'
         });
@@ -116,7 +116,7 @@ export default function SimpleTabs(props) {
 
     if(extraElective){
       try{
-        const res = await axios.post('/course-load/request-course-access',{
+        const res = await axios.post('/course-load/request-course-access/',{
           course_code: extraElective.code,
           course_type: 'E'
         });
@@ -173,7 +173,7 @@ export default function SimpleTabs(props) {
       <TabPanel value={value} index={2}>
           <Autocomplete
                 options={props.state.other_cdc_list}
-                getOptionLabel={option =>  `${option.code} (${option.code})`}
+                getOptionLabel={option =>  `${option.code} (${option.name})`}
                 style={styles.text_field}
                 label="Other Department's CDC"
                 required={true}
@@ -182,7 +182,7 @@ export default function SimpleTabs(props) {
                 />
                 <Autocomplete
                 options={props.state.other_elective_list}
-                getOptionLabel={option =>  `${option.code} (${option.code})`}
+                getOptionLabel={option =>  `${option.code} (${option.name})`}
                 style={styles.text_field}
                 label="Other Department's Electives"
                 required={true}
