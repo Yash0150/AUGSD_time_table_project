@@ -72,6 +72,9 @@ function App() {
   const handleDownloadInstructorWise = async () => {
     window.location.href="/course-load/download-instructor-wise";
   }
+  const handleFileAdd = async () => {
+    window.location.href="/course-load/add-comment/";
+  }
   return (
     <div className="App">
       <NavBar handleLogout={handleLogout}>
@@ -85,7 +88,14 @@ function App() {
                 Download Instructor-wise
               </Typography>
             </Button>
-            <Button variant="contained" color="secondary" onClick={handleSubmit} style={{marginBottom: 20, marginLeft: '20px'}}>
+            <br/>
+            <Button variant="contained" color="secondary" onClick={handleFileAdd} style={{marginBottom: 20, marginLeft: '20px'}}>
+              <Typography>
+                Add a file
+              </Typography>
+            </Button>
+            <br/>
+            <Button variant="contained" size={"large"} color="primary" onClick={handleSubmit} style={{marginBottom: 20, marginLeft: '20px'}}>
               <Typography>
                 Submit
               </Typography>
@@ -93,7 +103,7 @@ function App() {
               <br/>
             <Typography style={{color: 'red', fontWeight: 'bold',marginBottom: 10}} >{status}</Typography>
           <FlexDiv>
-            <CourseList state={state} setSelectedCourse={setSelectedCourse} courseInfo={courseInfo} setCourseInfo={setCourseInfo}/>
+            <CourseList state={state} setState={setState} setSelectedCourse={setSelectedCourse} courseInfo={courseInfo} setCourseInfo={setCourseInfo}/>
             <CourseInfo state={state} selectedCourse={selectedCourse} courseInfo={courseInfo} setCourseInfo={setCourseInfo}/>
             <SectionInfo courseInfo={courseInfo} setCourseInfo={setCourseInfo} state={state} selectedCourse={selectedCourse} />
           </FlexDiv>

@@ -30,6 +30,7 @@ const useStyles = makeStyles(theme =>({
         width: '100%',
     },
     text_field: {
+        width: '90%',
         margin: 'auto',
     },
     button: {
@@ -68,9 +69,13 @@ export default function CourseInfo(props) {
                 Course Info {props.selectedCourse ? `of ${props.selectedCourse}` : null}
             </Typography>
             <Form className={classes.root} noValidate>
-                <TextField onChange={(event) => handleInfoChange(event)} type="Number" name="l_count" label="lectures" style={styles.text_field} />
-                <TextField onChange={(event) => handleInfoChange(event)} type="Number" name="t_count" label="tutorials" style={styles.text_field}  />
-                <TextField onChange={(event) => handleInfoChange(event)} type="Number" name="p_count" label="practicals" style={styles.text_field}  />
+
+                <TextField onChange={(event) => handleInfoChange(event)} type="Number" name="l_section_count" label="no. of lectures" style={styles.text_field} />
+                <TextField onChange={(event) => handleInfoChange(event)} type="Number" name="t_section_count" label="no. of tutorials" style={styles.text_field} />
+                <TextField onChange={(event) => handleInfoChange(event)} type="Number" name="p_section_count" label="no. of practicals" style={styles.text_field} />
+                <TextField onChange={(event) => handleInfoChange(event)} type="Number" name="l_count" label="no. of faculties for lectures" style={styles.text_field} />
+                <TextField onChange={(event) => handleInfoChange(event)} type="Number" name="t_count" label="no. of faculties for tutorials" style={styles.text_field}  />
+                <TextField onChange={(event) => handleInfoChange(event)} type="Number" name="p_count" label="no. of faculties for practicals" style={styles.text_field}  />
                 <TextField onChange={(event) => handleInfoChange(event)} type="Number" name="student_count" label="No. of students" style={styles.text_field}  />
                 <Autocomplete
                 options={props.state.faculty_list}
@@ -78,10 +83,11 @@ export default function CourseInfo(props) {
                 style={styles.text_field}
                 label="IC"
                 required={true}
-                renderInput={params =>  <TextField style={styles.text_field} {...params} label={'IC'} />}
+                renderInput={params =>  <TextField style={{...styles.text_field,width: '100%'}} {...params} label={'IC'} />}
                 onChange={(event,value) => handleIcChange(event,value)}
                 />
                 <TextField onChange={(event) => handleInfoChange(event)} type="Number" name="max_strength" label="Max Strength" style={styles.text_field}  />
+
             </Form>
         </CardContent>
         </Card>
