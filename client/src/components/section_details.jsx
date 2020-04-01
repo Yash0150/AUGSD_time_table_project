@@ -73,10 +73,19 @@ export default function CourseInfo(props) {
     }
 
     const getAutoCompleteComp = (data,type,no) => {
+        let defaultValue;
+        if(type === "Lecture")
+        defaultValue = props.state.faculty_list.find(faculty => faculty.psrn_or_id == props.courseInfo.l[no]);
+        else if(type === "Tutorial")
+        defaultValue = props.state.faculty_list.find(faculty => faculty.psrn_or_id == props.courseInfo.t[no]);
+        else
+        defaultValue = props.state.faculty_list.find(faculty => faculty.psrn_or_id == props.courseInfo.p[no]);
+
         return (<Autocomplete
                 options={data}
                 key={data[no].name}
-                getOptionLabel={option => option.name}
+                getOptionLabel={option => `${option.name} (${option.psrn_or_id})`}
+                value={defaultValue}
                 style={{ width: '80%', margin: 'auto' }}
                 renderInput={params => <TextField style={classes.text_field} {...params} label={`${type} ${no+1}`} />}
                 onChange={(e,v) => handleInfoChange(e,v,type,no)}
@@ -114,7 +123,7 @@ export default function CourseInfo(props) {
         <Card className={classes.root}>
         <CardContent style={styles.card_content}>
             <Typography variant="h5" className={classes.heading} >
-                Sections Info {props.selectedCourse ? `of ${props.selectedCourse}` : null}
+                Faculty Info {props.selectedCourse ? `of ${props.selectedCourse}` : null}
             </Typography>
         </CardContent>
         <CardContent style={styles.card_content}>
