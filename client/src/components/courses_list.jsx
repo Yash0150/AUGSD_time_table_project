@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import axios from 'axios';
+import courseInfo from './course_info_data';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -138,13 +139,31 @@ export default function SimpleTabs(props) {
       else
       course_type = 'E'
       props.setCourseInfo({...props.courseInfo,course_type,course_code:course.code});
-
+      console.log({course_type,course_code:course.code});
       const res = await axios.post('/course-load/get-course-data/',{course_type,course_code:course.code});
+      // const res = {}
+      // res.data = courseInfo;
       const l = res.data.data.l.map(course => course.psrn_or_id);
       const t = res.data.data.t.map(course => course.psrn_or_id);
       const p = res.data.data.p.map(course => course.psrn_or_id);
       const ic = res.data.data.ic.psrn_or_id;
-      await props.setCourseInfo({...props.courseInfo,...res.data.data,l,t,p,ic });
+      await props.setCourseInfo({
+        l_count:0,
+        p_count:0,
+        t_count:0,
+        course_code: null,
+        course_type: null,
+        student_count: 0,
+        max_strength: 0,
+        l_section_count: 0,
+        t_section_count: 0,
+        p_section_count: 0,
+        ic: null,
+        l: [],
+        t: [],
+        p: []
+      });
+      await props.setCourseInfo({...res.data.data,l,t,p,ic });
       console.log(props.courseInfo);
       console.log(res.data);
   }
