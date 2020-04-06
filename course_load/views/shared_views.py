@@ -10,7 +10,7 @@ def download_course_wise(request):
     writer = csv.writer(response)
 
     writer.writerow(['Course number', 'Course title', 'Max strength per section: ', 'L', 'T', 'P'])
-    writer.writerow(['PSRN/ID', 'Instructor name','', 'L', 'T', 'P', 'Status'])
+    writer.writerow(['PSRN/ID', 'Instructor name','', 'L', 'T', 'P', 'Role'])
     # course_list = CourseInstructor.objects.filter().values('course').distinct()
     course_list = Course.objects.filter(ic__isnull = False).values('code').distinct()
     for course in course_list:
@@ -43,7 +43,7 @@ def download_instructor_wise(request):
     writer = csv.writer(response)
 
     writer.writerow(['PSRN/ID', 'Instructor name', 'Deptartment'])
-    writer.writerow(['Course number', 'Course title', '', 'L', 'T', 'P', 'Status'])
+    writer.writerow(['Course number', 'Course title', '', 'L', 'T', 'P', 'Role'])
     instructor_list = None
     if request.user.is_superuser:
         instructor_list_1 = list(CourseInstructor.objects.filter().values_list('instructor', flat=True).distinct())

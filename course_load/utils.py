@@ -11,7 +11,7 @@ def get_department_list():
     return ['BIO', 'CHE', 'CHEM', 'CS', 'ECON', 'EEE', 'HUM', 'MATH', 'MECH', 'PHY']
 
 def get_department_cdc_list(dept):
-    df = pd.read_excel('time table sw data-4 feb 20.xlsx', sheetnames='ICDCS')
+    df = pd.read_excel('data.xlsx', sheetnames='ICDCS')
     df.columns = df.iloc[0]
     df=df.iloc[1:]
     df.replace(np.nan,0)
@@ -29,7 +29,7 @@ def get_department_cdc_list(dept):
     return Lst
 
 def get_department_elective_list(dept):
-    dfe= pd.read_excel('time table sw data-4 feb 20.xlsx','2 elective list(BULLETIN 19-20)')
+    dfe= pd.read_excel('data.xlsx','2 elective list(BULLETIN 19-20)')
     dfe.columns = dfe.iloc[3]
     dfe=dfe.iloc[4:]
     Dict={}
@@ -66,7 +66,7 @@ def get_department_elective_list(dept):
     return Lst
 
 def get_department_instructor_list(dept):
-    dff= pd.read_excel('time table sw data-4 feb 20.xlsx','3PSRN')
+    dff= pd.read_excel('data.xlsx','3PSRN')
     Lst=[]
     for i in range(0, 176):
         if(dff['discipline'][i]==dept):
@@ -74,7 +74,7 @@ def get_department_instructor_list(dept):
     return Lst
 
 def get_department_phd_student_list(dept):
-    dfs= pd.read_excel('time table sw data-4 feb 20.xlsx','3STUDENTS')
+    dfs= pd.read_excel('data.xlsx','3STUDENTS')
     Lst=[]
     if(dept=='HSS' or dept=='HUM'):
         for i in range(0, 420):
@@ -87,7 +87,7 @@ def get_department_phd_student_list(dept):
     return Lst
 
 def get_instructor_list():
-    dff= pd.read_excel('time table sw data-4 feb 20.xlsx','3PSRN')
+    dff= pd.read_excel('data.xlsx','3PSRN')
     Lst=[]
     for i in range(0,176):
         Lst.append([dff['name'][i],dff['PSRN'][i]])
