@@ -10,6 +10,7 @@ from course_load.utils import get_department_list, get_department_cdc_list, get_
 from django.contrib.auth.models import User
 
 def create_super_user():
+    print("Creating superuser")
     try:
         (super_user, created) = User.objects.get_or_create(username="admin", is_superuser=True)
         super_user.set_password('adminpassword')
@@ -22,6 +23,7 @@ def create_super_user():
         print("Error occurred while creating super user")
 
 def create_user_profile():
+    print("Creating departments and users")
     try:
         dept_list = get_department_list()
         for i in dept_list:
@@ -37,6 +39,7 @@ def create_user_profile():
         print("Error creating user profiles")
 
 def create_instructor():
+    print("Creating instructors")
     try:
         dept_list = get_department_list()
         for i in dept_list:
@@ -64,26 +67,27 @@ def create_instructor():
         print("Error creating instructors")
 
 def create_course():
+    print("Creating courses")
     try:
         dept_list = get_department_list()
         for i in dept_list:
             dept = Department.objects.get(code = i)
-
             department_cdc_list = get_department_cdc_list(i)
+            print(department_cdc_list)
             for cdc in department_cdc_list:
                 print(cdc[0], ', ', cdc[1])
                 try:
-                    Course.objects.create(code = cdc[0], name = cdc[1], course_type = 'C', department = dept, l_count = cdc[2], t_count = cdc[3], p_count = cdc[4])
+                    Course.objects.create(code = cdc[0], name = cdc[1], course_type = 'C', department = dept, l_count = cdc[2], t_count = cdc[3], p_count = cdc[4], comcode=cdc[5])
                 except Exception as e:
                     print(cdc[0], ', ', cdc[1], " skipped as this cdc is already in db")
                 
             department_elective_list = get_department_elective_list(i)
             for elective in department_elective_list:
-                print(cdc[0], ', ', cdc[1])
+                print(elective[0], ', ', elective[1])
                 try:
-                    Course.objects.create(code = elective[0], name = elective[1], course_type = 'E', department = dept)
+                    Course.objects.create(code = elective[0], name = elective[1], course_type = 'E', department = dept, comcode=elective[2])
                 except Exception as e:
-                    print(cdc[0], ', ', cdc[1], " skipped as this elective is already in db as a cdc")
+                    print(elective[0], ', ', elective[1], " skipped as this elective is already in db as a cdc")
 
     except Exception as e:
         print(str(e))
@@ -92,24 +96,18 @@ def create_course():
 if __name__ == '__main__':
 
     print("Clearing database")
-    User.objects.all().delete()
-    Department.objects.all().delete()
-    UserProfile.objects.all().delete()
-    Instructor.objects.all().delete()
+    
+    # User.objects.all().delete()
+    # Department.objects.all().delete()
+    # UserProfile.objects.all().delete()
+    # Instructor.objects.all().delete()
     Course.objects.all().delete()
-    CourseInstructor.objects.all().delete()
-    CourseAccessRequested.objects.all().delete()
+    # CourseInstructor.objects.all().delete()
+    # CourseAccessRequested.objects.all().delete()
 
-    print("Creating superuser")
-    create_super_user()
-
-    print("Creating departments and users")
-    create_user_profile()
-
-    print("Creating instructors")
-    create_instructor()
-
-    print("Creating courses")
+    # create_super_user()
+    # create_user_profile()
+    # create_instructor()
     create_course()
 
     print("Done!")
