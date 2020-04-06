@@ -8,6 +8,7 @@ urlpatterns = [
     path('dashboard/', hod_views.DashboardView.as_view()),
     path('get-data/', hod_views.get_data),
     path('get-course-data/', hod_views.get_course_data),
+    path('clear-course/', hod_views.clear_course),
     path('submit-data/', hod_views.submit_data),
     path('add-comment/', hod_views.AddComment.as_view()),
     path('request-course-access/', hod_views.request_course_access),

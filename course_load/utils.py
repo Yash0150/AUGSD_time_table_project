@@ -57,7 +57,7 @@ def get_department_elective_list(dept):
     Lst=[]
     for i in range(0, dfe.shape[0]):
         if(Dict[dfe['Disc'][i]]==dept):
-            Lst.append([dfe['Course No'][i],dfe['Course Title'][i],dfe['com code'][i]])
+            Lst.append([dfe['Course No'][i],dfe['Course Title'][i],0 if math.isnan(dfe['com code'][i]) else dfe['com code'][i]])
 
     return Lst
 
