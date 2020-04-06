@@ -1,3 +1,5 @@
+import csv
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -5,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from course_load.forms import *
-from course_load.models import Course, Instructor
+from course_load.models import Course, Instructor, CourseInstructor
 
 @method_decorator(login_required, name='dispatch')
 class AddCourse(View):
@@ -204,6 +206,7 @@ def get_course_preview(request):
         course = Course.objects.get(code = code)
         data = {
             'name': course.name,
+            'comcode': course.comcode,
             'department': course.department.name,
             'course_type': course.course_type,
         }
@@ -211,6 +214,7 @@ def get_course_preview(request):
         print(e)
         data = {
             'name': '',
+            'comcode': '',
             'departemnt': '',
             'course_type': '',
         }
@@ -234,3 +238,44 @@ def get_instructor_preview(request):
             'instructor_type': '',
         }
     return JsonResponse(data)
+
+
+@login_required
+def download_erp(request):
+    if request.user.is_superuser:
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="Course Load ERP.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['Comcode', 'Course number', 'Course title', 'Section type', 'Section number', 'Instructor name', 'PSRN/ID', 'Role'])
+        course_list = Course.objects.filter(ic__isnull = False).values('code').distinct()
+        for course in course_list:
+            course = Course.objects.get(code = course['code'])
+
+            ic = course.ic
+            l_entry_list = CourseInstructor.objects.filter(course = course, instructor = ic, section_type = 'L')
+            for entry in l_entry_list:
+                writer.writerow([course.comcode, course.code, course.name, entry.section_type, entry.section_number, ic.name, ic.psrn_or_id, 'IC'])
+            t_entry_list = CourseInstructor.objects.filter(course = course, instructor = ic, section_type = 'T')
+            for entry in t_entry_list:
+                writer.writerow([course.comcode, course.code, course.name, entry.section_type, entry.section_number, ic.name, ic.psrn_or_id, 'IC'])
+            p_entry_list = CourseInstructor.objects.filter(course = course, instructor = ic, section_type = 'P')
+            for entry in p_entry_list:
+                writer.writerow([course.comcode, course.code, course.name, entry.section_type, entry.section_number, ic.name, ic.psrn_or_id, 'IC'])
+                
+            instructor_list = CourseInstructor.objects.filter(course = course).values('instructor').distinct()
+            for instructor in instructor_list:
+                if instructor['instructor'] == ic.psrn_or_id:
+                    continue
+                instructor = Instructor.objects.get(psrn_or_id = instructor['instructor'])
+                l_entry_list = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'L')
+                for entry in l_entry_list:
+                    writer.writerow([course.comcode, course.code, course.name, entry.section_type, entry.section_number, instructor.name, instructor.psrn_or_id, 'I'])
+                t_entry_list = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'T')
+                for entry in t_entry_list:
+                    writer.writerow([course.comcode, course.code, course.name, entry.section_type, entry.section_number, instructor.name, instructor.psrn_or_id, 'I'])
+                p_entry_list = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'P')
+                for entry in p_entry_list:
+                    writer.writerow([course.comcode, course.code, course.name, entry.section_type, entry.section_number, instructor.name, instructor.psrn_or_id, 'I'])
+        return response
+    else:
+        return HttpResponseRedirect('/course-load/dashboard')

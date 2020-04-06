@@ -1,6 +1,6 @@
 from django.urls import path
 from django.views.generic import TemplateView
-from course_load.views import (hod_views, shared_views)
+from course_load.views import (hod_views, shared_views, admin_views)
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -13,4 +13,5 @@ urlpatterns = [
     path('request-course-access/', hod_views.request_course_access),
     path('download-course-wise/', shared_views.download_course_wise),
     path('download-instructor-wise/', shared_views.download_instructor_wise),
+    path('download-erp/', admin_views.download_erp),
 ]

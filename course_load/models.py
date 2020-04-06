@@ -34,10 +34,8 @@ class Instructor(models.Model):
 class Course(models.Model):
     code = models.CharField(max_length=10, primary_key = True)
     # code = models.CharField(max_length=10, null = False)
+    comcode = models.IntegerField()
     name = models.CharField(max_length = 100, null = False)
-    l_section_count = models.IntegerField(default=0)
-    t_section_count = models.IntegerField(default=0)
-    p_section_count = models.IntegerField(default=0)
     l_count = models.IntegerField(default=0)
     t_count = models.IntegerField(default=0)
     p_count = models.IntegerField(default=0)
@@ -66,6 +64,7 @@ class CourseInstructor(models.Model):
         ('I', 'Independent'),
     )
     section_type = models.CharField(max_length=1, choices=SECTION_TYPES, null = False)
+    section_number = models.IntegerField(blank = False, null = False)
     course = models.ForeignKey(Course, default=None, on_delete=models.CASCADE)
     instructor = models.ForeignKey(Instructor, default=None, on_delete=models.CASCADE)
 

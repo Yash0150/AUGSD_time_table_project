@@ -11,23 +11,23 @@ def get_department_list():
     return ['BIO', 'CHE', 'CHEM', 'CS', 'ECON', 'EEE', 'HUM', 'MATH', 'MECH', 'PHY']
 
 def get_department_cdc_list(dept):
-    df = pd.read_excel('time table sw data-4 feb 20.xlsx', sheetnames='CDCS')
+    df = pd.read_excel('data.xlsx','CDC')
+    df.replace(np.nan,0)
     Lst=[]
     for i in range(0, df.shape[0]):
         if(df['dept'][i]==dept):
             Lst.append([
-                df['comcode'][i],
                 df['course no'][i],
                 df['course title'][i],
                 0 if math.isnan(df['L'][i]) else df['L'][i],
                 0 if math.isnan(df['T'][i]) else df['T'][i],
                 0 if math.isnan(df['P'][i]) else df['P'][i],
+                0 if math.isnan(df['comcode'][i]) else df['comcode'][i],
             ])
-            
     return Lst
 
 def get_department_elective_list(dept):
-    dfe= pd.read_excel('time table sw data-4 feb 20.xlsx','ELECTIVE')
+    dfe= pd.read_excel('data.xlsx','ELECTIVE')
     Dict={}
     for i in range(0, dfe.shape[0]):
         if(dfe['Disc'][i]=='B.E (Electronics & Instrumentation)' or dfe['Disc'][i]=='B.E. (Electrical & Electronics)'):
@@ -57,12 +57,12 @@ def get_department_elective_list(dept):
     Lst=[]
     for i in range(0, dfe.shape[0]):
         if(Dict[dfe['Disc'][i]]==dept):
-            Lst.append([dfe['com code'][i],dfe['Course No'][i],dfe['Course Title'][i]])
+            Lst.append([dfe['Course No'][i],dfe['Course Title'][i],dfe['com code'][i]])
 
     return Lst
 
 def get_department_instructor_list(dept):
-    dff= pd.read_excel('time table sw data-4 feb 20.xlsx','FACULTY')
+    dff= pd.read_excel('data.xlsx','FACULTY')
     Lst=[]
     for i in range(0, 176):
         if(dff['discipline'][i]==dept):
@@ -70,7 +70,7 @@ def get_department_instructor_list(dept):
     return Lst
 
 def get_department_phd_student_list(dept):
-    dfs= pd.read_excel('time table sw data-4 feb 20.xlsx','RESEARCH SCHOLAR')
+    dfs= pd.read_excel('data.xlsx','RESEARCH SCHOLAR')
     Lst=[]
     if(dept=='HSS' or dept=='HUM'):
         for i in range(0, 420):
@@ -83,7 +83,7 @@ def get_department_phd_student_list(dept):
     return Lst
 
 def get_instructor_list():
-    dff= pd.read_excel('time table sw data-4 feb 20.xlsx','FACULTY')
+    dff= pd.read_excel('data.xlsx','FACULTY')
     Lst=[]
     for i in range(0,176):
         Lst.append([dff['name'][i],dff['PSRN'][i]])
