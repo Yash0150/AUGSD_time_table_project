@@ -1,5 +1,5 @@
 from django import forms
-from .models import Department, Course, Instructor
+from .models import Department, Course, Instructor, UserProfile
 
 class CommentFileForm(forms.ModelForm):
     class Meta:  
@@ -7,6 +7,14 @@ class CommentFileForm(forms.ModelForm):
         fields = ['comment_file']
         labels = {
             "comment_file": "Comment file",
+        }
+
+class InitialDataFileForm(forms.ModelForm):
+    class Meta:  
+        model = UserProfile  
+        fields = ['initial_data_file']
+        labels = {
+            "initial_data_file": "Data File",
         }
 
 class AddCourseForm(forms.ModelForm):

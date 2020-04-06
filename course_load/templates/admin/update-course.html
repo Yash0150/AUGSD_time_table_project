@@ -5,104 +5,97 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-	
-	<div class="limiter">
-		<div class="container-login100">
-			<div class="wrap-login100" style="display: block; padding-top: 5vh;">
-				<div style="padding-bottom: 5vh;">
-					<a href="/course-load/dashboard">Back</a>
-				</div>
-				<div class="text-center">
-					<h1>Update Course</h1> 
-					<div style="margin: auto;">
-						<form class="m-5" action="/update-course/" method="post">
-							{% csrf_token %}
-							<div class="row">
-								<div class="col-6">
-									<h5 class="m-2" style="font-weight: bold;">Old Information</h5>
-									<div id="div_id_old_code" class="form-group">
-										<label for="id_old_code" class=" requiredField">
-											Course number
-											<span class="asteriskField">*</span>
-										</label>
-										<div class="">
-											<input type="text" name="old_code" maxlength="10" class="textinput textInput form-control" required="" id="id_old_code">
-										</div>
-									</div>
-									<div id="div_id_old_name" class="form-group">
-										<label for="id_old_name" class=" requiredField">
-											Course title
-											<span class="asteriskField">*</span>
-										</label>
-										<div class="">
-											<input readonly type="text" name="old_name" maxlength="10" class="textinput textInput form-control" required="" id="id_old_name">
-										</div>
-									</div>
-									<div id="div_id_old_comcode" class="form-group"> 
-										<label for="id_old_comcode" class=" requiredField">
-                							Comcode
-											<span class="asteriskField">*</span>
-										</label> 
-										<div class=""> 
-											<input readonly type="number" name="old_comcode" class="numberinput form-control" required="" id="id_old_comcode"> 
-										</div> 
-									</div>
-									<div id="div_id_old_department" class="form-group">
-										<label for="id_old_department" class=" requiredField">
-											Department
-											<span class="asteriskField">*</span>
-										</label>
-										<div class="">
-											<input readonly type="text" name="old_department" maxlength="10" class="textinput textInput form-control" required="" id="id_old_department">
-										</div>
-									</div>
-									<div id="div_id_old_course_type" class="form-group">
-										<label for="id_old_course_type" class=" requiredField">
-											Course type
-											<span class="asteriskField">*</span>
-										</label>
-										<div class="">
-											<input readonly type="text" name="old_course_type" maxlength="10" class="textinput textInput form-control" required="" id="id_old_course_type">
-										</div>
-									</div>
-								</div>
-								<div class="col-6">
-									<h5 class="m-2" style="font-weight: bold;">New Information</h5>
-									{{form|crispy}}
-								</div>
-							</div>
-							<input class="btn btn-dark" type="submit" value="Submit">
-						</form>
+
+<div class="text-left">
+	<a class="m-4" href="/course-load/dashboard">Back</a>
+</div>
+<div class="text-center">
+	<h1>Update Course</h1> 
+	<div style="margin: auto;">
+		<form class="m-5" action="/update-course/" method="post">
+			{% csrf_token %}
+			<div class="row">
+				<div class="col-6">
+					<h5 class="m-2" style="font-weight: bold;">Old Information</h5>
+					<div id="div_id_old_code" class="form-group">
+						<label for="id_old_code" class=" requiredField">
+							Course number
+							<span class="asteriskField">*</span>
+						</label>
+						<div class="">
+							<input type="text" name="old_code" maxlength="10" class="textinput textInput form-control" required="" id="id_old_code">
+						</div>
+					</div>
+					<div id="div_id_old_name" class="form-group">
+						<label for="id_old_name" class=" requiredField">
+							Course title
+							<span class="asteriskField">*</span>
+						</label>
+						<div class="">
+							<input readonly type="text" name="old_name" maxlength="10" class="textinput textInput form-control" required="" id="id_old_name">
+						</div>
+					</div>
+					<div id="div_id_old_comcode" class="form-group"> 
+						<label for="id_old_comcode" class=" requiredField">
+							Comcode
+							<span class="asteriskField">*</span>
+						</label> 
+						<div class=""> 
+							<input readonly type="number" name="old_comcode" class="numberinput form-control" required="" id="id_old_comcode"> 
+						</div> 
+					</div>
+					<div id="div_id_old_department" class="form-group">
+						<label for="id_old_department" class=" requiredField">
+							Department
+							<span class="asteriskField">*</span>
+						</label>
+						<div class="">
+							<input readonly type="text" name="old_department" maxlength="10" class="textinput textInput form-control" required="" id="id_old_department">
+						</div>
+					</div>
+					<div id="div_id_old_course_type" class="form-group">
+						<label for="id_old_course_type" class=" requiredField">
+							Course type
+							<span class="asteriskField">*</span>
+						</label>
+						<div class="">
+							<input readonly type="text" name="old_course_type" maxlength="10" class="textinput textInput form-control" required="" id="id_old_course_type">
+						</div>
 					</div>
 				</div>
+				<div class="col-6">
+					<h5 class="m-2" style="font-weight: bold;">New Information</h5>
+					{{form|crispy}}
+				</div>
 			</div>
-		</div>
+			<input class="btn btn-dark" type="submit" value="Submit">
+		</form>
 	</div>
-
+</div>
 	
 <!--===============================================================================================-->	
-	<script src="{% static 'registration/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
-	<script>
-		$("#id_old_code").change(function () {
-			var course_code = $(this).val();
-			$.ajax({
-				url: '/get-course-preview/',
-				data: {
-					'course_code': course_code
-				},
-				dataType: 'json',
-				success: function (data) {
-					$("#id_old_comcode").val(data.comcode);
-					$("#id_old_name").val(data.name);
-					$("#id_old_department").val(data.department);
-					if(data.course_type == 'C'){
-						$("#id_old_course_type").val("CDC");
-					} else if(data.course_type == 'E'){
-						$("#id_old_course_type").val("Elective");
-					}
+<script src="{% static 'registration/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<script>
+	$("#id_old_code").change(function () {
+		var course_code = $(this).val();
+		$.ajax({
+			url: '/get-course-preview/',
+			data: {
+				'course_code': course_code
+			},
+			dataType: 'json',
+			success: function (data) {
+				$("#id_old_comcode").val(data.comcode);
+				$("#id_old_name").val(data.name);
+				$("#id_old_department").val(data.department);
+				if(data.course_type == 'C'){
+					$("#id_old_course_type").val("CDC");
+				} else if(data.course_type == 'E'){
+					$("#id_old_course_type").val("Elective");
 				}
-			});
+			}
 		});
-	</script>
+	});
+</script>
 	
 {% endblock %}
