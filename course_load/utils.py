@@ -19,6 +19,7 @@ def get_department_cdc_list(dept):
     for i in range(1, df.shape[0]+1):
         if(df['dept'][i]==dept):
             Lst.append([
+                df['comcode'][i],
                 df['course no'][i],
                 df['course title'][i],
                 0 if math.isnan(df['L'][i]) else df['L'][i],
@@ -61,7 +62,7 @@ def get_department_elective_list(dept):
     Lst=[]
     for i in range(4, dfe.shape[0]+1):
         if(Dict[dfe['Disc'][i]]==dept):
-            Lst.append([dfe['Course No'][i],dfe['Course Title'][i]])
+            Lst.append([dfe['com code'][i],dfe['Course No'][i],dfe['Course Title'][i]])
 
     return Lst
 
