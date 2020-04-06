@@ -22,8 +22,12 @@ def create_super_user():
         print(str(e))
         print("Error occurred while creating super user")
 
-def create_user_profile():
+def create_user_profile(file):
     print("Creating departments and users")
+
+    print("Creating admin user profile")
+    UserProfile.objects.create(user = User.objects.filter(is_superuser=True).first())
+
     try:
         dept_list = get_department_list()
         for i in dept_list:
@@ -38,14 +42,14 @@ def create_user_profile():
         print(str(e))
         print("Error creating user profiles")
 
-def create_instructor():
+def create_instructor(file):
     print("Creating instructors")
     try:
         dept_list = get_department_list()
         for i in dept_list:
             dept = Department.objects.get(code = i)
 
-            department_instructor_list = get_department_instructor_list(i)
+            department_instructor_list = get_department_instructor_list(i, file)
             for instructor in department_instructor_list:
                 print(instructor[0], ', ', instructor[1])
                 try:
@@ -53,7 +57,7 @@ def create_instructor():
                 except Exception as e:
                     print(instructor[0], ', ', instructor[1], " skipped as this instructor is already in db")
                 
-            department_phd_student_list = get_department_phd_student_list(i)
+            department_phd_student_list = get_department_phd_student_list(i, file)
             for phd_student in department_phd_student_list:
                 print(phd_student[0], ', ', phd_student[1])
                 try:
@@ -65,13 +69,13 @@ def create_instructor():
         print(str(e))
         print("Error creating instructors")
 
-def create_course():
+def create_course(file):
     print("Creating courses")
     try:
         dept_list = get_department_list()
         for i in dept_list:
             dept = Department.objects.get(code = i)
-            department_cdc_list = get_department_cdc_list(i)
+            department_cdc_list = get_department_cdc_list(i, file)
             for cdc in department_cdc_list:
                 print(cdc[0], ', ', cdc[1])
                 try:
@@ -79,7 +83,7 @@ def create_course():
                 except Exception as e:
                     print(cdc[0], ', ', cdc[1], " skipped as this cdc is already in db")
                 
-            department_elective_list = get_department_elective_list(i)
+            department_elective_list = get_department_elective_list(i, file)
             for elective in department_elective_list:
                 print(elective[0], ', ', elective[1])
                 try:
@@ -103,9 +107,20 @@ if __name__ == '__main__':
     CourseInstructor.objects.all().delete()
     CourseAccessRequested.objects.all().delete()
 
+    file = 'data.xlsx'
     create_super_user()
-    create_user_profile()
-    create_instructor()
-    create_course()
+    create_user_profile(file)
+    create_instructor(file)
+    create_course(file)
 
+    print("Done!")
+
+def populate_from_admin_data(file):
+    print("Clearing database")
+    Instructor.objects.all().delete()
+    Course.objects.all().delete()
+    CourseInstructor.objects.all().delete()
+    CourseAccessRequested.objects.all().delete()
+    create_instructor(file)
+    create_course(file)
     print("Done!")

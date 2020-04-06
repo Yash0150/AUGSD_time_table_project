@@ -21,9 +21,17 @@
         <a class="nav-link ml-auto" href="/accounts/logout">Logout</a>
     </nav>
 
-    {% block content %}
-    {% endblock %}
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100 text-center" style="display: block; padding: 20px;">
 
+			{% block content %}
+			{% endblock %}
+
+			</div>
+		</div>
+	</div>
+	
 <!--===============================================================================================-->
 	<script src="{% static 'registration/vendor/bootstrap/js/popper.js' %}"></script>
 	<script src="{% static 'registration/vendor/bootstrap/js/bootstrap.min.js' %}"></script>

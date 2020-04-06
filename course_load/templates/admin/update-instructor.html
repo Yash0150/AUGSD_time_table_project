@@ -5,93 +5,86 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-	
-	<div class="limiter">
-		<div class="container-login100">
-			<div class="wrap-login100" style="display: block; padding-top: 5vh;">
-				<div style="padding-bottom: 5vh;">
-					<a href="/course-load/dashboard">Back</a>
-				</div>
-				<div class="text-center">
-					<h1>Update Instructor</h1> 
-					<div style="margin: auto;">
-						<form class="m-5" action="/update-instructor/" method="post">
-							{% csrf_token %}
-							<div class="row">
-								<div class="col-6">
-									<h5 class="m-2" style="font-weight: bold;">Old Information</h5>
-									<div id="div_id_old_psrn_or_id" class="form-group">
-										<label for="id_old_psrn_or_id" class=" requiredField">
-											PSRN/ID<span class="asteriskField">*</span>
-										</label>
-										<div class="">
-											<input type="text" name="old_psrn_or_id" maxlength="50" class="textinput textInput form-control" required="" id="id_old_psrn_or_id">
-										</div>
-									</div>
-									<div id="div_id_old_name" class="form-group">
-										<label for="id_old_name" class=" requiredField">
-											Instructor title
-											<span class="asteriskField">*</span>
-										</label>
-										<div class="">
-											<input readonly type="text" name="old_name" maxlength="10" class="textinput textInput form-control" required="" id="id_old_name">
-										</div>
-									</div>
-									<div id="div_id_old_department" class="form-group">
-										<label for="id_old_department" class=" requiredField">
-											Department
-											<span class="asteriskField">*</span>
-										</label>
-										<div class="">
-											<input readonly type="text" name="old_department" maxlength="10" class="textinput textInput form-control" required="" id="id_old_department">
-										</div>
-									</div>
-									<div id="div_id_old_instructor_type" class="form-group">
-										<label for="id_old_instructor_type" class=" requiredField">
-											Instructor type
-											<span class="asteriskField">*</span>
-										</label>
-										<div class="">
-											<input readonly type="text" name="old_instructor_type" maxlength="10" class="textinput textInput form-control" required="" id="id_old_instructor_type">
-										</div>
-									</div>
-								</div>
-								<div class="col-6">
-									<h5 class="m-2" style="font-weight: bold;">New Information</h5>
-									{{form|crispy}}
-								</div>
-							</div>
-							<input class="btn btn-dark" type="submit" value="Submit">
-						</form>
+
+<div class="text-left">
+	<a class="m-4" href="/course-load/dashboard">Back</a>
+</div>
+<div class="text-center">
+	<h1>Update Instructor</h1> 
+	<div style="margin: auto;">
+		<form class="m-5" action="/update-instructor/" method="post">
+			{% csrf_token %}
+			<div class="row">
+				<div class="col-6">
+					<h5 class="m-2" style="font-weight: bold;">Old Information</h5>
+					<div id="div_id_old_psrn_or_id" class="form-group">
+						<label for="id_old_psrn_or_id" class=" requiredField">
+							PSRN/ID<span class="asteriskField">*</span>
+						</label>
+						<div class="">
+							<input type="text" name="old_psrn_or_id" maxlength="50" class="textinput textInput form-control" required="" id="id_old_psrn_or_id">
+						</div>
+					</div>
+					<div id="div_id_old_name" class="form-group">
+						<label for="id_old_name" class=" requiredField">
+							Instructor title
+							<span class="asteriskField">*</span>
+						</label>
+						<div class="">
+							<input readonly type="text" name="old_name" maxlength="10" class="textinput textInput form-control" required="" id="id_old_name">
+						</div>
+					</div>
+					<div id="div_id_old_department" class="form-group">
+						<label for="id_old_department" class=" requiredField">
+							Department
+							<span class="asteriskField">*</span>
+						</label>
+						<div class="">
+							<input readonly type="text" name="old_department" maxlength="10" class="textinput textInput form-control" required="" id="id_old_department">
+						</div>
+					</div>
+					<div id="div_id_old_instructor_type" class="form-group">
+						<label for="id_old_instructor_type" class=" requiredField">
+							Instructor type
+							<span class="asteriskField">*</span>
+						</label>
+						<div class="">
+							<input readonly type="text" name="old_instructor_type" maxlength="10" class="textinput textInput form-control" required="" id="id_old_instructor_type">
+						</div>
 					</div>
 				</div>
+				<div class="col-6">
+					<h5 class="m-2" style="font-weight: bold;">New Information</h5>
+					{{form|crispy}}
+				</div>
 			</div>
-		</div>
+			<input class="btn btn-dark" type="submit" value="Submit">
+		</form>
 	</div>
+</div>
 
-		
 <!--===============================================================================================-->	
-	<script src="{% static 'registration/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
-	<script>
-		$("#id_old_psrn_or_id").change(function () {
-			var psrn_or_id = $(this).val();
-			$.ajax({
-				url: '/get-instructor-preview/',
-				data: {
-					'psrn_or_id': psrn_or_id
-				},
-				dataType: 'json',
-				success: function (data) {
-					$("#id_old_name").val(data.name);
-					$("#id_old_department").val(data.department);
-					if(data.instructor_type == 'F'){
-						$("#id_old_instructor_type").val("Faculty");
-					} else if(data.instructor_type == 'S'){
-						$("#id_old_instructor_type").val("PHD Student");
-					}
+<script src="{% static 'registration/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<script>
+	$("#id_old_psrn_or_id").change(function () {
+		var psrn_or_id = $(this).val();
+		$.ajax({
+			url: '/get-instructor-preview/',
+			data: {
+				'psrn_or_id': psrn_or_id
+			},
+			dataType: 'json',
+			success: function (data) {
+				$("#id_old_name").val(data.name);
+				$("#id_old_department").val(data.department);
+				if(data.instructor_type == 'F'){
+					$("#id_old_instructor_type").val("Faculty");
+				} else if(data.instructor_type == 'S'){
+					$("#id_old_instructor_type").val("PHD Student");
 				}
-			});
+			}
 		});
-	</script>
+	});
+</script>
 
 {% endblock %}

@@ -4,26 +4,20 @@
 
 {% block content %}
 
-	<div class="limiter">
-		<div class="container-login100">
-			<div class="wrap-login100" style="display: block; padding-top: 5vh;">
-				<div style="padding-bottom: 5vh;">
-					<a href="/course-load/dashboard">Back</a>
-				</div>
-				<div class="text-center">
-					<h1>Add Instructor</h1> 
-					<div class="col-8" style="margin: auto;">
-						<form class="m-5" action="/add-instructor/" method="post">
-							{% csrf_token %}
-							<table>
-							{{form|crispy}}
-							</table>
-							<input class="btn btn-dark" type="submit" value="Submit">
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
+<div class="text-left">
+	<a class="m-4" href="/course-load/dashboard">Back</a>
+</div>
+<div class="text-center">
+	<h1>Add Instructor</h1> 
+	<div class="col-8" style="margin: auto;">
+		<form class="m-5" action="/add-instructor/" method="post">
+			{% csrf_token %}
+			<table>
+			{{form|crispy}}
+			</table>
+			<input class="btn btn-dark" type="submit" value="Submit">
+		</form>
 	</div>
+</div>
 
 {% endblock %}

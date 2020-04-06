@@ -1,4 +1,5 @@
 import csv
+import os
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
@@ -8,6 +9,9 @@ from django.views import View
 
 from course_load.forms import *
 from course_load.models import Course, Instructor, CourseInstructor
+
+from AUGSD_time_table_project.settings import MEDIA_ROOT, BASE_DIR
+from populate import populate_from_admin_data
 
 @method_decorator(login_required, name='dispatch')
 class AddCourse(View):
@@ -277,5 +281,46 @@ def download_erp(request):
                 for entry in p_entry_list:
                     writer.writerow([course.comcode, course.code, course.name, entry.section_type, entry.section_number, instructor.name, instructor.psrn_or_id, 'I'])
         return response
+    else:
+        return HttpResponseRedirect('/course-load/dashboard')
+
+@method_decorator(login_required, name='dispatch')
+class UploadInitialData(View):
+    form_class = InitialDataFileForm
+    initial = {'key': 'value'}
+    template_name = 'admin/upload-initial-data.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            form = self.form_class(initial=request.user.userprofile.__dict__)
+            return render(request, self.template_name, {
+                'form': form,
+                'uploaded_file': request.user.userprofile.initial_data_file})
+        else:
+            return HttpResponseRedirect('/course-load/dashboard')
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_superuser:
+            form = self.form_class(request.POST, request.FILES)
+            if form.is_valid():
+                request.user.userprofile.initial_data_file = request.FILES['initial_data_file']
+                request.user.userprofile.save()
+                populate_from_admin_data(MEDIA_ROOT+'/'+str(request.user.userprofile.initial_data_file))
+                return HttpResponseRedirect('/course-load/dashboard')
+            return render(request, self.template_name, {'form': form})
+        else:
+            return HttpResponseRedirect('/course-load/dashboard')
+
+@login_required
+def download_data_template(request):
+    if request.user.is_superuser:
+        path = BASE_DIR+'/'+'data_template.xlsx'
+        if os.path.exists(path):
+            with open(path, 'rb') as excel:
+                data = excel.read()
+
+            response = HttpResponse(data,content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename=data_template.xlsx'
+            return response
     else:
         return HttpResponseRedirect('/course-load/dashboard')

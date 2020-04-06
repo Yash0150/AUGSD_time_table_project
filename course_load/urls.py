@@ -15,4 +15,6 @@ urlpatterns = [
     path('download-course-wise/', shared_views.download_course_wise),
     path('download-instructor-wise/', shared_views.download_instructor_wise),
     path('download-erp/', admin_views.download_erp),
+    path('download-data-template/', admin_views.download_data_template),
+    path('upload-initial-data/', admin_views.UploadInitialData.as_view()),
 ]

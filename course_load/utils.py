@@ -10,8 +10,8 @@ from pandas import ExcelFile
 def get_department_list():
     return ['BIO', 'CHE', 'CHEM', 'CS', 'ECON', 'EEE', 'HUM', 'MATH', 'MECH', 'PHY']
 
-def get_department_cdc_list(dept):
-    df = pd.read_excel('data.xlsx','CDC')
+def get_department_cdc_list(dept, file):
+    df = pd.read_excel(file,'CDC')
     df.replace(np.nan,0)
     Lst=[]
     for i in range(0, df.shape[0]):
@@ -26,8 +26,8 @@ def get_department_cdc_list(dept):
             ])
     return Lst
 
-def get_department_elective_list(dept):
-    dfe= pd.read_excel('data.xlsx','ELECTIVE')
+def get_department_elective_list(dept, file):
+    dfe= pd.read_excel(file,'ELECTIVE')
     Dict={}
     for i in range(0, dfe.shape[0]):
         if(dfe['Disc'][i]=='B.E (Electronics & Instrumentation)' or dfe['Disc'][i]=='B.E. (Electrical & Electronics)'):
@@ -61,16 +61,16 @@ def get_department_elective_list(dept):
 
     return Lst
 
-def get_department_instructor_list(dept):
-    dff= pd.read_excel('data.xlsx','FACULTY')
+def get_department_instructor_list(dept, file):
+    dff= pd.read_excel(file,'FACULTY')
     Lst=[]
     for i in range(0, 176):
         if(dff['discipline'][i]==dept):
             Lst.append([dff['name'][i],dff['PSRN'][i]])
     return Lst
 
-def get_department_phd_student_list(dept):
-    dfs= pd.read_excel('data.xlsx','RESEARCH SCHOLAR')
+def get_department_phd_student_list(dept, file):
+    dfs= pd.read_excel(file,'RESEARCH SCHOLAR')
     Lst=[]
     if(dept=='HSS' or dept=='HUM'):
         for i in range(0, 420):
@@ -82,8 +82,8 @@ def get_department_phd_student_list(dept):
                 Lst.append([dfs['name'][i],dfs['IDNO'][i]])
     return Lst
 
-def get_instructor_list():
-    dff= pd.read_excel('data.xlsx','FACULTY')
+def get_instructor_list(file):
+    dff= pd.read_excel(file,'FACULTY')
     Lst=[]
     for i in range(0,176):
         Lst.append([dff['name'][i],dff['PSRN'][i]])
