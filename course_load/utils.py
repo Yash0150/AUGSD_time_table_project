@@ -14,7 +14,7 @@ def get_department_cdc_list(dept):
     df = pd.read_excel('data.xlsx','CDC')
     df.replace(np.nan,0)
     Lst=[]
-    for i in range(1, df.shape[0]+1):
+    for i in range(0, df.shape[0]):
         if(df['dept'][i]==dept):
             Lst.append([
                 df['course no'][i],
@@ -29,7 +29,7 @@ def get_department_cdc_list(dept):
 def get_department_elective_list(dept):
     dfe= pd.read_excel('data.xlsx','ELECTIVE')
     Dict={}
-    for i in range(4, dfe.shape[0]+1):
+    for i in range(0, dfe.shape[0]):
         if(dfe['Disc'][i]=='B.E (Electronics & Instrumentation)' or dfe['Disc'][i]=='B.E. (Electrical & Electronics)'):
             Dict[dfe['Disc'][i]]='EEE'
         if(dfe['Disc'][i]=='B.E. (Computer Science)' or dfe['Disc'][i]=='ME. (Computer Science)'):
@@ -55,7 +55,7 @@ def get_department_elective_list(dept):
         if(dfe['Disc'][i]=='M.Sc. (Physics)'):
             Dict[dfe['Disc'][i]]='PHY'
     Lst=[]
-    for i in range(4, dfe.shape[0]+1):
+    for i in range(0, dfe.shape[0]):
         if(Dict[dfe['Disc'][i]]==dept):
             Lst.append([dfe['Course No'][i],dfe['Course Title'][i],dfe['com code'][i]])
 
