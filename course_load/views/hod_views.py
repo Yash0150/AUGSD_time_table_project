@@ -84,44 +84,44 @@ def get_data(request, *args, **kwargs):
         response['message'] = str(e)
     return JsonResponse(response, safe=False)
 
-@login_required
-# @csrf_exempt
+# @login_required
+@csrf_exempt
 def get_course_data(request, *args, **kwargs):
     response = {}
     try:
         body_unicode = request.body.decode('utf-8')
         data = json.loads(body_unicode)
         course = Course.objects.get(code = data['course_code'], course_type = data['course_type'])
-        l_entry_list = CourseInstructor.objects.filter(section_type = 'L', course = course).values('instructor')
+        l_entry_list = CourseInstructor.objects.filter(section_type = 'L', course = course).values('instructor', 'section_number')
         l_instructor_list = []
         for entry in l_entry_list:
             instructor = Instructor.objects.get(psrn_or_id = entry['instructor'])
             l_instructor_list.append({
                 'name': instructor.name,
                 'psrn_or_id': instructor.psrn_or_id,
+                'section_number': entry['section_number'],
             })
-        t_entry_list = CourseInstructor.objects.filter(section_type = 'T', course = course).values('instructor')
+        t_entry_list = CourseInstructor.objects.filter(section_type = 'T', course = course).values('instructor', 'section_number')
         t_instructor_list = []
         for entry in t_entry_list:
             instructor = Instructor.objects.get(psrn_or_id = entry['instructor'])
             t_instructor_list.append({
                 'name': instructor.name,
                 'psrn_or_id': instructor.psrn_or_id,
+                'section_number': entry['section_number'],
             })
-        p_entry_list = CourseInstructor.objects.filter(section_type = 'P', course = course).values('instructor')
+        p_entry_list = CourseInstructor.objects.filter(section_type = 'P', course = course).values('instructor', 'section_number')
         p_instructor_list = []
         for entry in p_entry_list:
             instructor = Instructor.objects.get(psrn_or_id = entry['instructor'])
             p_instructor_list.append({
                 'name': instructor.name,
                 'psrn_or_id': instructor.psrn_or_id,
+                'section_number': entry['section_number'],
             })
         response['data'] = {
             'course_code': course.code,
             'course_type': course.course_type,
-            'l_section_count': course.l_section_count,
-            't_section_count': course.t_section_count,
-            'p_section_count': course.p_section_count,
             'l_count': course.l_count,
             't_count': course.t_count,
             'p_count': course.p_count,
@@ -169,8 +169,8 @@ def request_course_access(request, *args, **kwargs):
         response['message'] = str(e)
     return JsonResponse(response, safe=False)
 
-@login_required
-# @csrf_exempt
+# @login_required
+@csrf_exempt
 def submit_data(request, *args, **kwargs):
     response = {}
     try:
@@ -178,9 +178,6 @@ def submit_data(request, *args, **kwargs):
         data = json.loads(body_unicode)
         course = Course.objects.filter(code = data['course_code'], course_type = data['course_type'])
         course.update(
-            l_section_count = data['l_section_count'],
-            t_section_count = data['t_section_count'],
-            p_section_count = data['p_section_count'],
             l_count = data['l_count'],
             t_count = data['t_count'],
             p_count = data['p_count'],
@@ -194,26 +191,29 @@ def submit_data(request, *args, **kwargs):
         l = data['l']
         t = data['t']
         p = data['p']
-        for psrn_or_id in l:
-            instructor = Instructor.objects.get(psrn_or_id = psrn_or_id)
+        for entry in l:
+            instructor = Instructor.objects.get(psrn_or_id = entry['psrn_or_id'])
             CourseInstructor.objects.create(
                 section_type = 'L',
                 course = course.first(),
-                instructor = instructor
+                instructor = instructor,
+                section_number = entry['section_number']
             )
-        for psrn_or_id in t:
-            instructor = Instructor.objects.get(psrn_or_id = psrn_or_id)
+        for entry in t:
+            instructor = Instructor.objects.get(psrn_or_id = entry['psrn_or_id'])
             CourseInstructor.objects.create(
                 section_type = 'T',
                 course = course.first(),
-                instructor = instructor
+                instructor = instructor,
+                section_number = entry['section_number']
             )
-        for psrn_or_id in p:
-            instructor = Instructor.objects.get(psrn_or_id = psrn_or_id)
+        for entry in p:
+            instructor = Instructor.objects.get(psrn_or_id = entry['psrn_or_id'])
             CourseInstructor.objects.create(
                 section_type = 'P',
                 course = course.first(),
-                instructor = instructor
+                instructor = instructor,
+                section_number = entry['section_number']
             )
 
         response['error'] = False

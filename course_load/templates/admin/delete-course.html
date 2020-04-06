@@ -1,25 +1,10 @@
-<!DOCTYPE html>
+{% extends "admin/base-admin.html" %}
+
 {% load static %}
-<html lang="en">
-<head>
-	<title>Delete Course</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'registration/vendor/bootstrap/css/bootstrap.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'registration/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'registration/css/util.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'registration/css/main.css' %}">
-<!--===============================================================================================-->
-</head>
-<body>
-	{% load crispy_forms_tags %}
-	
-    <nav class="navbar navbar-light bg-light " style = "position: fixed; top:0; width:100%;">
-        <a class="nav-link ml-auto" href="/accounts/logout">Logout</a>
-    </nav>
+
+{% load crispy_forms_tags %}
+
+{% block content %}
 	
 	<div class="limiter">
 		<div class="container-login100">
@@ -41,6 +26,15 @@
 								<div class="">
 									<input readonly type="text" name="old_name" maxlength="10" class="textinput textInput form-control" required="" id="id_old_name">
 								</div>
+							</div>
+							<div id="div_id_old_comcode" class="form-group"> 
+								<label for="id_old_comcode" class=" requiredField">
+									Comcode
+									<span class="asteriskField">*</span>
+								</label> 
+								<div class=""> 
+									<input readonly type="number" name="old_comcode" class="numberinput form-control" required="" id="id_old_comcode"> 
+								</div> 
 							</div>
 							<div id="div_id_old_department" class="form-group">
 								<label for="id_old_department" class=" requiredField">
@@ -68,16 +62,9 @@
 		</div>
 	</div>
 	
-	
-
-	
+		
 <!--===============================================================================================-->	
 	<script src="{% static 'registration/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'registration/vendor/bootstrap/js/popper.js' %}"></script>
-	<script src="{% static 'registration/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'registration/vendor/select2/select2.min.js' %}"></script>
 	<script>
 		$("#id_code").change(function () {
 			var course_code = $(this).val();
@@ -90,6 +77,7 @@
 				success: function (data) {
 					console.log(data.course_name);
 					$("#id_old_name").val(data.name);
+					$("#id_old_comcode").val(data.comcode);
 					$("#id_old_department").val(data.department);
 					if(data.course_type == 'C'){
 						$("#id_old_course_type").val("CDC");
@@ -101,5 +89,4 @@
 		});
 	</script>
 
-</body>
-</html>
+{% endblock %}
