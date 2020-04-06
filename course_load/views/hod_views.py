@@ -84,8 +84,8 @@ def get_data(request, *args, **kwargs):
         response['message'] = str(e)
     return JsonResponse(response, safe=False)
 
-# @login_required
-@csrf_exempt
+@login_required
+# @csrf_exempt
 def get_course_data(request, *args, **kwargs):
     response = {}
     try:
@@ -169,8 +169,8 @@ def request_course_access(request, *args, **kwargs):
         response['message'] = str(e)
     return JsonResponse(response, safe=False)
 
-# @login_required
-@csrf_exempt
+@login_required
+# @csrf_exempt
 def submit_data(request, *args, **kwargs):
     response = {}
     try:
@@ -216,6 +216,32 @@ def submit_data(request, *args, **kwargs):
                 section_number = entry['section_number']
             )
 
+        response['error'] = False
+        response['message'] = 'success'
+    except Exception as e:
+        print(e)
+        response['error'] = True
+        response['message'] = str(e)
+    return JsonResponse(response, safe=False)
+
+# @login_required
+@csrf_exempt
+def clear_course(request, *args, **kwargs):
+    response = {}
+    try:
+        body_unicode = request.body.decode('utf-8')
+        data = json.loads(body_unicode)
+        course = Course.objects.filter(code = data['course_code'])
+        course.update(
+            l_count = 0,
+            t_count = 0,
+            p_count = 0,
+            max_strength_per_l = 0,
+            max_strength_per_t = 0,
+            max_strength_per_p = 0,
+            ic = None,
+        )
+        CourseInstructor.objects.filter(course = course.first()).delete()
         response['error'] = False
         response['message'] = 'success'
     except Exception as e:

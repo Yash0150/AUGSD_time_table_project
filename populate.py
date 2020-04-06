@@ -53,7 +53,6 @@ def create_instructor():
                 except Exception as e:
                     print(instructor[0], ', ', instructor[1], " skipped as this instructor is already in db")
                 
-            # Error: The truth value of a Series is ambiguous. Use a.empty, a.bool(), a.item(), a.any() or a.all().
             department_phd_student_list = get_department_phd_student_list(i)
             for phd_student in department_phd_student_list:
                 print(phd_student[0], ', ', phd_student[1])
@@ -73,7 +72,6 @@ def create_course():
         for i in dept_list:
             dept = Department.objects.get(code = i)
             department_cdc_list = get_department_cdc_list(i)
-            print(department_cdc_list)
             for cdc in department_cdc_list:
                 print(cdc[0], ', ', cdc[1])
                 try:
@@ -97,17 +95,17 @@ if __name__ == '__main__':
 
     print("Clearing database")
     
-    # User.objects.all().delete()
-    # Department.objects.all().delete()
-    # UserProfile.objects.all().delete()
-    # Instructor.objects.all().delete()
+    User.objects.all().delete()
+    Department.objects.all().delete()
+    UserProfile.objects.all().delete()
+    Instructor.objects.all().delete()
     Course.objects.all().delete()
-    # CourseInstructor.objects.all().delete()
-    # CourseAccessRequested.objects.all().delete()
+    CourseInstructor.objects.all().delete()
+    CourseAccessRequested.objects.all().delete()
 
-    # create_super_user()
-    # create_user_profile()
-    # create_instructor()
+    create_super_user()
+    create_user_profile()
+    create_instructor()
     create_course()
 
     print("Done!")
