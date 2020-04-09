@@ -120,9 +120,9 @@ export default function CourseInfo(props) {
         if(type === "Lecture" && courseInfo.l[index])
         defaultValue = courseInfo.l[index] || null;
         else if(type === "Tutorial"  && courseInfo.t[index])
-        defaultValue = courseInfo.l[index] || null;
+        defaultValue = courseInfo.t[index] || null;
         else if(type === "Practical"  && courseInfo.p[index])
-        defaultValue = courseInfo.l[index] || null;
+        defaultValue = courseInfo.p[index] || null;
 
         if(type === "Lecture"){
             for(let i=1; i<= courseInfo.l_count;i++){
