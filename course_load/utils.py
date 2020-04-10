@@ -79,7 +79,14 @@ def get_department_phd_student_list(dept):
     else:
         for i in range(0, 420):
             if(dfs['discipline'][i][0:3]==dept[0:3]):
-                Lst.append([dfs['name'][i],dfs['IDNO'][i]])
+                if(dept=='CHE'):
+                    if(dfs['discipline'][i]=='CHE' or dfs['discipline'][i]=='CHEMISTRY'):
+                        Lst.append([dfs['name'][i],dfs['IDNO'][i]])
+                elif(dept=='CHEM'):
+                    if(dfs['discipline'][i]=='CHEM' or dfs['discipline'][i]=='CHEMICAL'):
+                        Lst.append([dfs['name'][i],dfs['IDNO'][i]])
+                else:
+                    Lst.append([dfs['name'][i],dfs['IDNO'][i]])
     return Lst
 
 def get_instructor_list():
