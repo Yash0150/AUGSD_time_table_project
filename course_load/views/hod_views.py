@@ -66,7 +66,13 @@ def get_data(request, *args, **kwargs):
         department_elective_list = Course.objects.filter(department = dept, course_type = 'E')
         other_cdc_list = Course.objects.filter(course_type = 'C').difference(department_cdc_list).difference(requested_cdc_list)
         other_elective_list = Course.objects.filter(course_type = 'E').difference(department_elective_list).difference(requested_elective_list)
-        faculty_list = Instructor.objects.filter(department = dept)
+        faculty_list_1 = Instructor.objects.filter(department = dept, instructor_type = 'F')
+        faculty_list_2 = Instructor.objects.filter(department = dept, instructor_type = 'S')
+        faculty_list_3 = Instructor.objects.filter(instructor_type = 'F').exclude(department = dept)
+        faculty_list_1 = list(faculty_list_1.values('name', 'psrn_or_id'))
+        faculty_list_2 = list(faculty_list_2.values('name', 'psrn_or_id'))
+        faculty_list_3 = list(faculty_list_3.values('name', 'psrn_or_id'))
+        faculty_list = faculty_list_1 + faculty_list_2 + faculty_list_3
         response['data'] = {
             'department_cdc_list': list(department_cdc_list.values('name', 'code')),
             'department_elective_list': list(department_elective_list.values('name', 'code')),
@@ -74,7 +80,7 @@ def get_data(request, *args, **kwargs):
             'requested_elective_list': list(requested_elective_list.values('name', 'code')),
             'other_cdc_list': list(other_cdc_list.values('name', 'code')),
             'other_elective_list': list(other_elective_list.values('name', 'code')),
-            'faculty_list': list(faculty_list.values('name', 'psrn_or_id')),
+            'faculty_list': faculty_list,
         }
         response['error'] = False
         response['message'] = 'success'
@@ -233,9 +239,6 @@ def clear_course(request, *args, **kwargs):
         data = json.loads(body_unicode)
         course = Course.objects.filter(code = data['course_code'])
         course.update(
-            l_count = 0,
-            t_count = 0,
-            p_count = 0,
             max_strength_per_l = 0,
             max_strength_per_t = 0,
             max_strength_per_p = 0,
