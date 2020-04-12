@@ -69,17 +69,35 @@ def get_data(request, *args, **kwargs):
         faculty_list_1 = Instructor.objects.filter(department = dept, instructor_type = 'F')
         faculty_list_2 = Instructor.objects.filter(department = dept, instructor_type = 'S')
         faculty_list_3 = Instructor.objects.filter(instructor_type = 'F').exclude(department = dept)
+        department_cdc_list = list(department_cdc_list.values('name', 'code', 'ic'))
+        for course in department_cdc_list:
+            course['is_active'] = course['ic'] != None
+            course.pop('ic')
+        department_elective_list = list(department_elective_list.values('name', 'code', 'ic'))
+        for course in department_elective_list:
+            course['is_active'] = course['ic'] != None
+            course.pop('ic')
+        requested_cdc_list = list(requested_cdc_list.values('name', 'code', 'ic'))
+        for course in requested_cdc_list:
+            course['is_active'] = course['ic'] != None
+            course.pop('ic')
+        requested_elective_list = list(requested_elective_list.values('name', 'code', 'ic'))
+        for course in requested_elective_list:
+            course['is_active'] = course['ic'] != None
+            course.pop('ic')
+        other_cdc_list = list(other_cdc_list.values('name', 'code'))
+        other_elective_list = list(other_elective_list.values('name', 'code'))
         faculty_list_1 = list(faculty_list_1.values('name', 'psrn_or_id'))
         faculty_list_2 = list(faculty_list_2.values('name', 'psrn_or_id'))
         faculty_list_3 = list(faculty_list_3.values('name', 'psrn_or_id'))
         faculty_list = faculty_list_1 + faculty_list_2 + faculty_list_3
         response['data'] = {
-            'department_cdc_list': list(department_cdc_list.values('name', 'code')),
-            'department_elective_list': list(department_elective_list.values('name', 'code')),
-            'requested_cdc_list': list(requested_cdc_list.values('name', 'code')),
-            'requested_elective_list': list(requested_elective_list.values('name', 'code')),
-            'other_cdc_list': list(other_cdc_list.values('name', 'code')),
-            'other_elective_list': list(other_elective_list.values('name', 'code')),
+            'department_cdc_list': department_cdc_list,
+            'department_elective_list': department_elective_list,
+            'requested_cdc_list': requested_cdc_list,
+            'requested_elective_list': requested_elective_list,
+            'other_cdc_list': other_cdc_list,
+            'other_elective_list': other_elective_list,
             'faculty_list': faculty_list,
         }
         response['error'] = False
