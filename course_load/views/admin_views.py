@@ -256,16 +256,22 @@ def download_erp(request):
             course = Course.objects.get(code = course['code'])
 
             ic = course.ic
+            ic_printed = False
             l_entry_list = CourseInstructor.objects.filter(course = course, instructor = ic, section_type = 'L')
             for entry in l_entry_list:
+                ic_printed = True
                 writer.writerow([course.comcode, course.code, course.name, entry.section_type, entry.section_number, ic.name, ic.psrn_or_id, 'IC'])
             t_entry_list = CourseInstructor.objects.filter(course = course, instructor = ic, section_type = 'T')
             for entry in t_entry_list:
+                ic_printed = True
                 writer.writerow([course.comcode, course.code, course.name, entry.section_type, entry.section_number, ic.name, ic.psrn_or_id, 'IC'])
             p_entry_list = CourseInstructor.objects.filter(course = course, instructor = ic, section_type = 'P')
             for entry in p_entry_list:
+                ic_printed = True
                 writer.writerow([course.comcode, course.code, course.name, entry.section_type, entry.section_number, ic.name, ic.psrn_or_id, 'IC'])
-                
+            if not ic_printed:
+                writer.writerow([course.comcode, course.code, course.name, 'R', '1', ic.name, ic.psrn_or_id, 'IC'])
+              
             instructor_list = CourseInstructor.objects.filter(course = course).values('instructor').distinct()
             for instructor in instructor_list:
                 if instructor['instructor'] == ic.psrn_or_id:
