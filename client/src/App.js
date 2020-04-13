@@ -193,6 +193,7 @@ function App() {
 				>
 					<Typography>Upload Comment File</Typography>
 				</Button>
+				<br />
 				<Button
 					variant="contained"
 					color="secondary"
@@ -201,7 +202,6 @@ function App() {
 				>
 					<Typography>Clear Course Data</Typography>
 				</Button>
-				<br />
 				<Button
 					variant="contained"
 					size={'large'}
