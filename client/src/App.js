@@ -153,10 +153,10 @@ function App() {
 		const course_code = courseInfo.course_code;
 		if (course_code) {
 			try {
-				await axios.post('/course-load/clear-course/', { course_code });
+				const res = await axios.post('/course-load/clear-course/', { course_code });
+				setCourseInfo(res.data.data);
 			} catch (err) {
 				console.log(err);
-			} finally {
 				setCourseInfo({ ...defaultCourseInfo });
 			}
 		} else setStatus('Please choose a course before clearing its data');

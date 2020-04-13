@@ -91,9 +91,11 @@ export default function CourseInfo(props) {
 	return (
 		<Card className={classes.root}>
 			<CardContent style={styles.card_content}>
-				<Typography variant="h5" className={classes.heading}>
+				<Typography variant="h6" className={classes.heading}>
 					Course Info{' '}
-					{props.selectedCourse ? `of ${props.selectedCourse.code} - ${props.selectedCourse.name}` : null}
+					{props.selectedCourse ? ` of ` : null}
+					<br/>
+					{props.selectedCourse ? `${props.selectedCourse.code} - ${props.selectedCourse.name}` : null}
 				</Typography>
 				<Form className={classes.root} noValidate>
 					<TextField
@@ -128,10 +130,10 @@ export default function CourseInfo(props) {
                 <TextField onChange={(event) => handleInfoChange(event)} value={props.courseInfo.p_count} type="Number" name="p_count" label="no. of faculties for practicals" style={styles.text_field}  /> */}
 					<Autocomplete
 						options={props.state.faculty_list}
-						getOptionLabel={(option) => `${option.name} ${option.psrn_or_id}`}
+						getOptionLabel={(option) => `${option.name} (${option.psrn_or_id})` || null}
 						style={styles.text_field}
 						// value={defaultIC || { name: '', psrn_or_id: '' }}
-						value={defaultIC || null}
+						value={defaultIC}
 						label="IC"
 						required={true}
 						renderInput={(params) => (

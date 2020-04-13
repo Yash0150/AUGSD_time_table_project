@@ -175,7 +175,7 @@ export default function SimpleTabs(props) {
 			return (
 				<CardActions key={course.code}>
 					<Button
-						style={{ fontWeight: course.is_active ? 'bold' : 'none' }}
+						style={course.is_active ?{ fontWeight:  '900',fontSize: '1.05rem' }:{}}
 						className={classes.button}
 						value={course}
 						onClick={(event) => handleClick(course)}
