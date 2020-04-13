@@ -87,13 +87,14 @@ export default function CourseInfo(props) {
 		if (v) setCourseInfo({ ...courseInfo, ic: v.psrn_or_id });
 	};
 	const defaultIC = props.state.faculty_list.find((faculty) => faculty.psrn_or_id == props.courseInfo.ic);
+	console.log(defaultIC);
 
 	return (
 		<Card className={classes.root}>
 			<CardContent style={styles.card_content}>
 				<Typography variant="h6" className={classes.heading}>
 					Course Info{' '}
-					{props.selectedCourse ? ` of ` : null}
+					{/* {props.selectedCourse ? ` of ` : null} */}
 					<br/>
 					{props.selectedCourse ? `${props.selectedCourse.code} - ${props.selectedCourse.name}` : null}
 				</Typography>

@@ -191,7 +191,7 @@ export default function CourseInfo(props) {
 			<CardContent style={styles.card_content}>
 				<Typography variant="h6" className={classes.heading}>
 					Faculty Info{' '}
-					{props.selectedCourse ? ` of ` : null}
+					{/* {props.selectedCourse ? ` of ` : null} */}
 					<br/>
 					{props.selectedCourse ? `${props.selectedCourse.code} - ${props.selectedCourse.name}` : null}
 				</Typography>
