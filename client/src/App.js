@@ -154,9 +154,16 @@ function App() {
 		if (course_code) {
 			try {
 				await axios.post('/course-load/clear-course/', { course_code });
+				const res = await axios.post('/course-load/get-course-data/', { course_type, course_code: course.code });
+					res.data.data.l.length = res.data.data.l_count;
+					res.data.data.t.length = res.data.data.t_count;
+					res.data.data.p.length = res.data.data.p_count;
+					const ic = res.data.data.ic.psrn_or_id;
+					await props.setCourseInfo({...defaultCourseInfo});
+					await props.setCourseInfo({ ...res.data.data, ic });
+
 			} catch (err) {
 				console.log(err);
-			} finally {
 				setCourseInfo({ ...defaultCourseInfo });
 			}
 		} else setStatus('Please choose a course before clearing its data');

@@ -189,9 +189,11 @@ export default function CourseInfo(props) {
 	return (
 		<Card className={classes.root}>
 			<CardContent style={styles.card_content}>
-				<Typography variant="h5" className={classes.heading}>
+				<Typography variant="h6" className={classes.heading}>
 					Faculty Info{' '}
-					{props.selectedCourse ? `of ${props.selectedCourse.code} - ${props.selectedCourse.name}` : null}
+					{props.selectedCourse ? ` of ` : null}
+					<br/>
+					{props.selectedCourse ? `${props.selectedCourse.code} - ${props.selectedCourse.name}` : null}
 				</Typography>
 			</CardContent>
 			<CardContent style={styles.card_content}>
