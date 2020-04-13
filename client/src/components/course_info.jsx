@@ -86,9 +86,10 @@ export default function CourseInfo(props) {
 	const handleIcChange = (e, v) => {
 		if (v) setCourseInfo({ ...courseInfo, ic: v.psrn_or_id });
 	};
-	const defaultIC = props.state.faculty_list.find((faculty) => faculty.psrn_or_id == props.courseInfo.ic);
-	console.log(defaultIC);
-
+	let defaultIC = props.state.faculty_list.find((faculty) => faculty.psrn_or_id == props.courseInfo.ic);
+	if(!defaultIC){
+		defaultIC = null;
+	}
 	return (
 		<Card className={classes.root}>
 			<CardContent style={styles.card_content}>
@@ -131,7 +132,7 @@ export default function CourseInfo(props) {
                 <TextField onChange={(event) => handleInfoChange(event)} value={props.courseInfo.p_count} type="Number" name="p_count" label="no. of faculties for practicals" style={styles.text_field}  /> */}
 					<Autocomplete
 						options={props.state.faculty_list}
-						getOptionLabel={(option) => `${option.name} (${option.psrn_or_id})` || null}
+						getOptionLabel={(option) => `${option.name} (${option.psrn_or_id})`}
 						style={styles.text_field}
 						// value={defaultIC || { name: '', psrn_or_id: '' }}
 						value={defaultIC}
