@@ -134,7 +134,10 @@ function App() {
 		courseInfo.student_count = parseInt(courseInfo.student_count);
 		axios
 			.post('/course-load/submit-data/', courseInfo)
-			.then((response) => setStatus('Submitted'))
+			.then((response) => {
+				setStatus('Submitted');
+				window.location.reload(false);
+			})
 			.catch((err) => setStatus('Not Submitted'));
 	};
 	const handleLogout = async () => {
@@ -165,6 +168,7 @@ function App() {
 			} catch (err) {
 				console.log(err);
 				setCourseInfo({ ...defaultCourseInfo });
+				setStatus('Course Data has been cleared');
 			}
 		} else setStatus('Please choose a course before clearing its data');
 
