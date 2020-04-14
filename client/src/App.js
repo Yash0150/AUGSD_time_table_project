@@ -155,9 +155,9 @@ function App() {
 			try {
 				await axios.post('/course-load/clear-course/', { course_code });
 				const res = await axios.post('/course-load/get-course-data/', { course_type: courseInfo.course_type, course_code });
-					res.data.data.l.length = res.data.data.l_count;
-					res.data.data.t.length = res.data.data.t_count;
-					res.data.data.p.length = res.data.data.p_count;
+					// res.data.data.l.length = res.data.data.l_count;
+					// res.data.data.t.length = res.data.data.t_count;
+					// res.data.data.p.length = res.data.data.p_count;
 					const ic = res.data.data.ic.psrn_or_id;
 					await setCourseInfo({...defaultCourseInfo});
 					await setCourseInfo({ ...res.data.data, ic });
