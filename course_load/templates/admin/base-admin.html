@@ -21,9 +21,26 @@
         <a class="nav-link ml-auto" href="/accounts/logout">Logout</a>
     </nav>
 
+
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100 text-center" style="display: block; padding: 20px;">
+
+			{% if messages %}
+			<div class="container">
+				<div class="row">
+					<div class="col-md-7" style="margin: 0 auto; padding: 0;">
+							<ul class="messages m-0 p-0 text-center">
+								{% for message in messages %}
+								<li{% if message.tags %} class="m-1 p-1 {{ message.tags }} alert" {% endif %} style="list-style-type:none">
+									{{ message }}
+								</li>
+								{% endfor %}
+							</ul>
+					</div>
+				</div>
+			</div>
+			{% endif %}
 
 			{% block content %}
 			{% endblock %}

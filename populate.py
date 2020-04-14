@@ -51,7 +51,7 @@ def create_instructor(file):
 
             department_instructor_list = get_department_instructor_list(i, file)
             for instructor in department_instructor_list:
-                print(instructor[0], ', ', instructor[1])
+                # print(instructor[0], ', ', instructor[1])
                 try:
                     Instructor.objects.create(psrn_or_id = instructor[1], name = instructor[0], instructor_type = 'F', department = dept)
                 except Exception as e:
@@ -59,7 +59,7 @@ def create_instructor(file):
                 
             department_phd_student_list = get_department_phd_student_list(i, file)
             for phd_student in department_phd_student_list:
-                print(phd_student[0], ', ', phd_student[1])
+                # print(phd_student[0], ', ', phd_student[1])
                 try:
                     Instructor.objects.create(psrn_or_id = phd_student[1], name = phd_student[0], instructor_type = 'S', department = dept)
                 except Exception as e:
@@ -77,7 +77,7 @@ def create_course(file):
             dept = Department.objects.get(code = i)
             department_cdc_list = get_department_cdc_list(i, file)
             for cdc in department_cdc_list:
-                print(cdc[0], ', ', cdc[1])
+                # print(cdc[0], ', ', cdc[1])
                 try:
                     Course.objects.create(code = cdc[0], name = cdc[1], course_type = 'C', department = dept, l_count = cdc[2], t_count = cdc[3], p_count = cdc[4], comcode=cdc[5])
                 except Exception as e:
@@ -85,7 +85,7 @@ def create_course(file):
                 
             department_elective_list = get_department_elective_list(i, file)
             for elective in department_elective_list:
-                print(elective[0], ', ', elective[1])
+                # print(elective[0], ', ', elective[1])
                 try:
                     Course.objects.create(code = elective[0], name = elective[1], course_type = 'E', department = dept, comcode=elective[2])
                 except Exception as e:

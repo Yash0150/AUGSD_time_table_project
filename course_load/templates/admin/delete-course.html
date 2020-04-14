@@ -59,6 +59,9 @@
 <!--===============================================================================================-->	
 <script src="{% static 'registration/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
 <script>
+	$(document).on("keydown", "form", function(event) { 
+		return event.key != "Enter";
+	});
 	$("#id_code").change(function () {
 		var course_code = $(this).val();
 		$.ajax({
@@ -68,7 +71,6 @@
 			},
 			dataType: 'json',
 			success: function (data) {
-				console.log(data.course_name);
 				$("#id_old_name").val(data.name);
 				$("#id_old_comcode").val(data.comcode);
 				$("#id_old_department").val(data.department);
@@ -76,6 +78,8 @@
 					$("#id_old_course_type").val("CDC");
 				} else if(data.course_type == 'E'){
 					$("#id_old_course_type").val("Elective");
+				} else {
+					$("#id_old_course_type").val(data.course_type);
 				}
 			}
 		});
