@@ -1,6 +1,7 @@
 import csv
 import os
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -34,13 +35,17 @@ class AddCourse(View):
                     course, created = Course.objects.get_or_create(
                         code = form.cleaned_data['code'], 
                         name = form.cleaned_data['name'], 
+                        comcode = form.cleaned_data['comcode'], 
                         department = form.cleaned_data['department'], 
                         course_type = form.cleaned_data['course_type'], 
                     )
+                    messages.success(request, "Course added successfully.", extra_tags='alert-success')
                     return HttpResponseRedirect('/course-load/dashboard')
+                messages.error(request, "Error occured. Course not added.", extra_tags='alert-danger')
                 return render(request, self.template_name, {'form': form})
             except Exception as e:
                 print(e)
+                messages.error(request, "Error occured. Course not added.", extra_tags='alert-danger')
                 return render(request, self.template_name, {'form': form})
         else:
             return HttpResponseRedirect('/course-load/dashboard')
@@ -69,10 +74,13 @@ class AddInstructor(View):
                         department = form.cleaned_data['department'], 
                         instructor_type = form.cleaned_data['instructor_type'], 
                     )
+                    messages.success(request, "Instructor added successfully.", extra_tags='alert-success')
                     return HttpResponseRedirect('/course-load/dashboard')
+                messages.error(request, "Error occured. Instructor not added.", extra_tags='alert-danger')
                 return render(request, self.template_name, {'form': form})
             except Exception as e:
                 print(e)
+                messages.error(request, "Error occured. Instructor not added.", extra_tags='alert-danger')
                 return render(request, self.template_name, {'form': form})
         else:
             return HttpResponseRedirect('/course-load/dashboard')
@@ -98,6 +106,7 @@ class UpdateCourse(View):
                 form = self.form_class(request.POST, instance = course)
             except Course.DoesNotExist:
                 form = self.form_class(initial=self.initial)
+                messages.error(request, "Course not found.", extra_tags='alert-danger')
                 return render(request, self.template_name, {'form': form})
             course.delete()
             try:
@@ -107,10 +116,12 @@ class UpdateCourse(View):
                     form.department = Department.objects.get(code = form.cleaned_data['department']), 
                     form.course_type = form.cleaned_data['course_type'], 
                     form.save()
+                    messages.success(request, "Course updated successfully.", extra_tags='alert-success')
                     return HttpResponseRedirect('/course-load/dashboard')
             except Exception as e:
                 course_original.save()
                 print(e)
+                messages.error(request, "Error occured. Course not updated.", extra_tags='alert-danger')
                 return render(request, self.template_name, {'form': form})
         else:
             return HttpResponseRedirect('/course-load/dashboard')
@@ -136,6 +147,7 @@ class UpdateInstructor(View):
                 form = self.form_class(request.POST, instance = instructor)
             except Instructor.DoesNotExist:
                 form = self.form_class(initial=self.initial)
+                messages.error(request, "Instructor not found.", extra_tags='alert-danger')
                 return render(request, self.template_name, {'form': form})
             instructor.delete()
             try:
@@ -145,10 +157,12 @@ class UpdateInstructor(View):
                     form.department = Department.objects.get(code = form.cleaned_data['department']), 
                     form.instructor_type = form.cleaned_data['instructor_type'], 
                     form.save()
+                    messages.success(request, "Instructor updated successfully.", extra_tags='alert-success')
                     return HttpResponseRedirect('/course-load/dashboard')
             except Exception as e:
                 instructor_original.save()
                 print(e)
+                messages.error(request, "Error occured. Instructor not updated.", extra_tags='alert-danger')
                 return render(request, self.template_name, {'form': form})
         else:
             return HttpResponseRedirect('/course-load/dashboard')
@@ -172,8 +186,10 @@ class DeleteCourse(View):
                 course = Course.objects.get(code = request.POST['code'])
             except Course.DoesNotExist:
                 form = self.form_class(initial=self.initial)
+                messages.error(request, "Course not found.", extra_tags='alert-danger')
                 return render(request, self.template_name, {'form': form})
             course.delete()
+            messages.success(request, "Course deleted successfully.", extra_tags='alert-success')
             return HttpResponseRedirect('/course-load/dashboard')
         else:
             return HttpResponseRedirect('/course-load/dashboard')
@@ -197,8 +213,10 @@ class DeleteInstructor(View):
                 instructor = Instructor.objects.get(psrn_or_id = request.POST['psrn_or_id'])
             except Instructor.DoesNotExist:
                 form = self.form_class(initial=self.initial)
+                messages.error(request, "Instructor not found.", extra_tags='alert-danger')
                 return render(request, self.template_name, {'form': form})
             instructor.delete()
+            messages.success(request, "Instructor deleted successfully.", extra_tags='alert-success')
             return HttpResponseRedirect('/course-load/dashboard')
         else:
             return HttpResponseRedirect('/course-load/dashboard')
@@ -308,12 +326,19 @@ class UploadInitialData(View):
     def post(self, request, *args, **kwargs):
         if request.user.is_superuser:
             form = self.form_class(request.POST, request.FILES)
-            if form.is_valid():
-                request.user.userprofile.initial_data_file = request.FILES['initial_data_file']
-                request.user.userprofile.save()
-                populate_from_admin_data(MEDIA_ROOT+'/'+str(request.user.userprofile.initial_data_file))
-                return HttpResponseRedirect('/course-load/dashboard')
-            return render(request, self.template_name, {'form': form})
+            try:
+                if form.is_valid():
+                    request.user.userprofile.initial_data_file = request.FILES['initial_data_file']
+                    request.user.userprofile.save()
+                    populate_from_admin_data(MEDIA_ROOT+'/'+str(request.user.userprofile.initial_data_file))
+                    messages.success(request, "Data uploaded successfully.", extra_tags='alert-success')
+                    return HttpResponseRedirect('/course-load/dashboard')
+                messages.success(request, "Error occured. Data not updated.", extra_tags='alert-success')
+                return render(request, self.template_name, {'form': form})
+            except Exception as e:
+                print(e)
+                messages.error(request, "Error occured. Data not updated.", extra_tags='alert-danger')
+                return render(request, self.template_name, {'form': form})
         else:
             return HttpResponseRedirect('/course-load/dashboard')
 

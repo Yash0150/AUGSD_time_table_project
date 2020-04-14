@@ -81,6 +81,8 @@
 					$("#id_old_instructor_type").val("Faculty");
 				} else if(data.instructor_type == 'S'){
 					$("#id_old_instructor_type").val("PHD Student");
+				} else {
+					$("#id_old_instructor_type").val(data.instructor_type);
 				}
 			}
 		});

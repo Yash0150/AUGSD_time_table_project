@@ -92,6 +92,8 @@
 					$("#id_old_course_type").val("CDC");
 				} else if(data.course_type == 'E'){
 					$("#id_old_course_type").val("Elective");
+				} else {
+					$("#id_old_course_type").val(data.course_type);
 				}
 			}
 		});
