@@ -144,9 +144,9 @@ export default function SimpleTabs(props) {
 		// const l = res.data.data.l.map(course => course.psrn_or_id);
 		// const t = res.data.data.t.map(course => course.psrn_or_id);
 		// const p = res.data.data.p.map(course => course.psrn_or_id);
-		res.data.data.l.length = res.data.data.l_count;
-		res.data.data.t.length = res.data.data.t_count;
-		res.data.data.p.length = res.data.data.p_count;
+		// res.data.data.l.length = res.data.data.l_count;
+		// res.data.data.t.length = res.data.data.t_count;
+		// res.data.data.p.length = res.data.data.p_count;
 		const ic = res.data.data.ic.psrn_or_id;
 		await props.setCourseInfo({
 			l_count: 0,
