@@ -33,7 +33,7 @@ class Instructor(models.Model):
         return self.name
 
 class Course(models.Model):
-    code = models.CharField(max_length=10, primary_key = True)
+    code = models.CharField(max_length=20, primary_key = True)
     # code = models.CharField(max_length=10, null = False)
     comcode = models.IntegerField()
     name = models.CharField(max_length = 100, null = False)
