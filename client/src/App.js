@@ -166,9 +166,10 @@ function App() {
 					await setCourseInfo({ ...res.data.data, ic });
 
 			} catch (err) {
-				console.log(err);
+				// console.log(err);
 				setCourseInfo({ ...defaultCourseInfo });
 				setStatus('Course Data has been cleared');
+				window.location.reload(false);
 			}
 		} else setStatus('Please choose a course before clearing its data');
 
