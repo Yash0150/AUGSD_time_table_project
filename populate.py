@@ -81,7 +81,7 @@ def create_course(file):
                 try:
                     Course.objects.create(code = cdc[0], name = cdc[1], course_type = 'C', department = dept, l_count = cdc[2], t_count = cdc[3], p_count = cdc[4], comcode=cdc[5])
                 except Exception as e:
-                    print(cdc[0], ', ', cdc[1], " skipped as this cdc is already in db")
+                    print(cdc[0], ', ', cdc[1], " skipped: this cdc is already in db ("+str(e)+")")
                 
             department_elective_list = get_department_elective_list(i, file)
             for elective in department_elective_list:
@@ -89,7 +89,7 @@ def create_course(file):
                 try:
                     Course.objects.create(code = elective[0], name = elective[1], course_type = 'E', department = dept, comcode=elective[2])
                 except Exception as e:
-                    print(elective[0], ', ', elective[1], " skipped as this elective is already in db as a cdc")
+                    print(elective[0], ', ', elective[1], " skipped: this elective is already in db as a cdc ("+str(e)+")")
 
     except Exception as e:
         print(str(e))
