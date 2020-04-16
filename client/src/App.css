@@ -1,7 +1,6 @@
 .App {
   text-align: center;
 }
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -35,4 +34,10 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+span.MuiButton-label{
+  text-align: left !important;
+  display: flex;
+  justify-content: left;
 }
