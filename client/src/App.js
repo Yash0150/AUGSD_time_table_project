@@ -164,6 +164,7 @@ function App() {
 					const ic = res.data.data.ic.psrn_or_id;
 					await setCourseInfo({...defaultCourseInfo});
 					await setCourseInfo({ ...res.data.data, ic });
+					window.location.reload(false);
 
 			} catch (err) {
 				// console.log(err);
