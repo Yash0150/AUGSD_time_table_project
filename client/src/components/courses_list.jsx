@@ -77,12 +77,23 @@ export default function SimpleTabs(props) {
 	const [ extraElective, setExtraElective ] = React.useState(null);
 	const [ extraCourseStatus, setExtraCourseStatus ] = React.useState(null);
 
-	const handleNewCDC_change = (e, v) => {
-		setExtraCDC(v);
-	};
-	const handleNewElective_change = (e, v) => {
-		setExtraElective(v);
-	};
+	// const handleNewCDC_change = (e, v) => {
+	// 	setExtraCDC(v);
+	// };
+	// const handleNewElective_change = (e, v) => {
+	// 	setExtraElective(v);
+	// };
+
+	const handleNewCourseChange = (e, v) => {
+		const isCDC = props.state.other_cdc_list.includes(v);
+		const isElective = props.state.other_elective_list.includes(v);
+
+		if(isCDC){
+			setExtraCDC(v);
+		}else if(isElective){
+			setExtraElective(v);
+		}
+	}
 	const CDC = [ ...props.state.department_cdc_list, ...props.state.requested_cdc_list ];
 	const Electives = [ ...props.state.department_elective_list, ...props.state.requested_elective_list ];
 
@@ -204,7 +215,7 @@ export default function SimpleTabs(props) {
 				{getCourseList(Electives)}
 			</TabPanel>
 			<TabPanel value={value} index={2}>
-				<Autocomplete
+				{/* <Autocomplete
 					options={props.state.other_cdc_list.sort(sortFunction)}
 					getOptionLabel={(option) => `${option.code} (${option.name})`}
 					style={styles.text_field}
@@ -233,6 +244,21 @@ export default function SimpleTabs(props) {
 						/>
 					)}
 					onChange={(event, value) => handleNewElective_change(event, value)}
+				/> */}
+				<Autocomplete
+					options={[...props.state.other_cdc_list,...props.state.other_elective_list].sort(sortFunction)}
+					getOptionLabel={(option) => `${option.code} (${option.name})`}
+					style={styles.text_field}
+					label="Other Department's Courses"
+					required={true}
+					renderInput={(params) => (
+						<TextField
+							style={{ ...styles.text_field, width: '100%' }}
+							{...params}
+							label={"Other Department's Courses"}
+						/>
+					)}
+					onChange={(event, value) => handleNewCourseChange(event, value)}
 				/>
 				<Button
 					variant="contained"
