@@ -38,6 +38,7 @@ class AddCourse(View):
                         comcode = form.cleaned_data['comcode'], 
                         department = form.cleaned_data['department'], 
                         course_type = form.cleaned_data['course_type'], 
+                        merge_with = form.cleaned_data['merge_with'], 
                     )
                     messages.success(request, "Course added successfully.", extra_tags='alert-success')
                     return HttpResponseRedirect('/course-load/dashboard')
@@ -231,6 +232,7 @@ def get_course_preview(request):
             'comcode': course.comcode,
             'department': course.department.name,
             'course_type': course.course_type,
+            'merge_with': '-' if course.merge_with is None else course.merge_with.code,
         }
     except Exception as e:
         print(e)
@@ -239,6 +241,7 @@ def get_course_preview(request):
             'comcode': '',
             'departemnt': '',
             'course_type': '',
+            'merge_with': '',
         }
     return JsonResponse(data)
 

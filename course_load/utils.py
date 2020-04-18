@@ -6,6 +6,40 @@ import pandas as pd
 import numpy as np
 from pandas import ExcelWriter
 from pandas import ExcelFile
+from course_load.models import Course
+
+def get_equivalent_course_info(code):
+    course_list = []
+    # Current Course
+    current_course = Course.objects.filter(code = code).first()
+    course_list.append({
+        'code': current_course.code,
+        'course_type': current_course.course_type,
+    })
+    # Parent Course
+    if current_course.merge_with is not None:
+        parent_course = Course.objects.filter(code = current_course.merge_with.code).first() 
+        course_list.append({
+            'code': parent_course.code,
+            'course_type': parent_course.course_type,
+        })
+        # Sibling Courses
+        sibiling_course_list = parent_course.course_set.all()
+        for sibling_course in sibiling_course_list:
+            if sibling_course == current_course:
+                continue
+            course_list.append({
+                'code': sibling_course.code,
+                'course_type': sibling_course.course_type,
+            })
+    # Child Courses
+    child_course_list = current_course.course_set.all()
+    for child_course in child_course_list:
+        course_list.append({
+            'code': child_course.code,
+            'course_type': child_course.course_type,
+        })
+    return course_list
 
 def get_department_list():
     return ['BIO', 'CHE', 'CHEM', 'CS', 'ECON', 'EEE', 'HUM', 'MATH', 'MECH', 'PHY']
@@ -23,6 +57,7 @@ def get_department_cdc_list(dept, file):
                 0 if math.isnan(df['T'][i]) else df['T'][i],
                 0 if math.isnan(df['P'][i]) else df['P'][i],
                 0 if math.isnan(df['comcode'][i]) else df['comcode'][i],
+                None if type(df['merge with'][i]) is not str else df['merge with'][i],
             ])
     return Lst
 
@@ -57,7 +92,12 @@ def get_department_elective_list(dept, file):
     Lst=[]
     for i in range(0, dfe.shape[0]):
         if(Dict[dfe['Disc'][i]]==dept):
-            Lst.append([dfe['Course No'][i],dfe['Course Title'][i],0 if math.isnan(dfe['com code'][i]) else dfe['com code'][i]])
+            Lst.append([
+                dfe['Course No'][i],
+                dfe['Course Title'][i],
+                0 if math.isnan(dfe['com code'][i]) else dfe['com code'][i],
+                None if type(dfe['merge with'][i]) is not str else dfe['merge with'][i],
+            ])
 
     return Lst
 

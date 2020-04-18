@@ -55,7 +55,8 @@ def create_instructor(file):
                 try:
                     Instructor.objects.create(psrn_or_id = instructor[1], name = instructor[0], instructor_type = 'F', department = dept)
                 except Exception as e:
-                    print(instructor[0], ', ', instructor[1], " skipped as this instructor is already in db")
+                    # print(instructor[0], ', ', instructor[1], " skipped as this instructor is already in db")
+                    pass
                 
             department_phd_student_list = get_department_phd_student_list(i, file)
             for phd_student in department_phd_student_list:
@@ -63,7 +64,8 @@ def create_instructor(file):
                 try:
                     Instructor.objects.create(psrn_or_id = phd_student[1], name = phd_student[0], instructor_type = 'S', department = dept)
                 except Exception as e:
-                    print(instructor[0], ', ', instructor[1], " skipped as this phd scholar is already in db")
+                    # print(instructor[0], ', ', instructor[1], " skipped as this phd scholar is already in db")
+                    pass
 
     except Exception as e:
         print(str(e))
@@ -78,18 +80,50 @@ def create_course(file):
             department_cdc_list = get_department_cdc_list(i, file)
             for cdc in department_cdc_list:
                 # print(cdc[0], ', ', cdc[1])
+                parent_course = None
+                if cdc[6] is not None:
+                    parent_course = Course.objects.filter(code=cdc[6]).first()
+                    if parent_course is None:
+                        print('Parent course ['+cdc[6]+'] of '+cdc[1]+' ['+cdc[0]+'] not found.')
                 try:
-                    Course.objects.create(code = cdc[0], name = cdc[1], course_type = 'C', department = dept, l_count = cdc[2], t_count = cdc[3], p_count = cdc[4], comcode=cdc[5])
+                    Course.objects.create(
+                        code = cdc[0], 
+                        name = cdc[1], 
+                        course_type = 'C', 
+                        department = dept, 
+                        l_count = cdc[2], 
+                        t_count = cdc[3], 
+                        p_count = cdc[4], 
+                        comcode = cdc[5], 
+                        merge_with = parent_course,
+                    )
                 except Exception as e:
-                    print(cdc[0], ', ', cdc[1], " skipped: this cdc is already in db ("+str(e)+")")
+                    # print(cdc[0], ', ', cdc[1], " skipped: this cdc is already in db ("+str(e)+")")
+                    pass
                 
             department_elective_list = get_department_elective_list(i, file)
             for elective in department_elective_list:
                 # print(elective[0], ', ', elective[1])
+                parent_course = None
+                if elective[3] is not None:
+                    parent_course = Course.objects.filter(code=elective[3]).first()
+                    if parent_course is None:
+                        print('Parent course ['+elective[3]+'] of '+elective[1]+' ['+elective[0]+'] not found.')
+                    else:
+                        print(parent_course)
+
                 try:
-                    Course.objects.create(code = elective[0], name = elective[1], course_type = 'E', department = dept, comcode=elective[2])
+                    Course.objects.create(
+                        code = elective[0], 
+                        name = elective[1], 
+                        course_type = 'E', 
+                        department = dept, 
+                        comcode = elective[2],
+                        merge_with = parent_course,
+                    )
                 except Exception as e:
-                    print(elective[0], ', ', elective[1], " skipped: this elective is already in db as a cdc ("+str(e)+")")
+                    # print(elective[0], ', ', elective[1], " skipped: this elective is already in db as a cdc ("+str(e)+")")
+                    pass
 
     except Exception as e:
         print(str(e))

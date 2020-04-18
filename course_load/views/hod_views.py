@@ -11,7 +11,7 @@ from django.views import generic, View
 
 from course_load.forms import CommentFileForm
 from course_load.models import Department, Course, Instructor, CourseInstructor, CourseAccessRequested
-from course_load.utils import get_department_list
+from course_load.utils import get_department_list, get_equivalent_course_info
 
 # Only for testing
 from django.views.decorators.csrf import csrf_exempt
@@ -108,8 +108,8 @@ def get_data(request, *args, **kwargs):
         response['message'] = str(e)
     return JsonResponse(response, safe=False)
 
-@login_required
-# @csrf_exempt
+# @login_required
+@csrf_exempt
 def get_course_data(request, *args, **kwargs):
     response = {}
     try:
@@ -143,6 +143,7 @@ def get_course_data(request, *args, **kwargs):
                 'psrn_or_id': instructor.psrn_or_id,
                 'section_number': entry['section_number'],
             })
+        equivalent_course_list = get_equivalent_course_info(data['course_code'])
         response['data'] = {
             'course_code': course.code,
             'course_type': course.course_type,
@@ -155,6 +156,7 @@ def get_course_data(request, *args, **kwargs):
             'l': l_instructor_list,
             't': t_instructor_list,
             'p': p_instructor_list,
+            'equivalent_course_list': equivalent_course_list,
         }
         if course.ic:
             response['data']['ic'] = {
@@ -200,45 +202,47 @@ def submit_data(request, *args, **kwargs):
     try:
         body_unicode = request.body.decode('utf-8')
         data = json.loads(body_unicode)
-        course = Course.objects.filter(code = data['course_code'], course_type = data['course_type'])
-        course.update(
-            l_count = data['l_count'],
-            t_count = data['t_count'],
-            p_count = data['p_count'],
-            max_strength_per_l = data['max_strength_per_l'],
-            max_strength_per_t = data['max_strength_per_t'],
-            max_strength_per_p = data['max_strength_per_p'],
-            ic = Instructor.objects.get(psrn_or_id = data['ic']),
-        )
 
-        CourseInstructor.objects.filter(course = course.first()).delete()
-        l = data['l']
-        t = data['t']
-        p = data['p']
-        for entry in l:
-            instructor = Instructor.objects.get(psrn_or_id = entry['psrn_or_id'])
-            CourseInstructor.objects.create(
-                section_type = 'L',
-                course = course.first(),
-                instructor = instructor,
-                section_number = entry['section_number']
-            )
-        for entry in t:
-            instructor = Instructor.objects.get(psrn_or_id = entry['psrn_or_id'])
-            CourseInstructor.objects.create(
-                section_type = 'T',
-                course = course.first(),
-                instructor = instructor,
-                section_number = entry['section_number']
-            )
-        for entry in p:
-            instructor = Instructor.objects.get(psrn_or_id = entry['psrn_or_id'])
-            CourseInstructor.objects.create(
-                section_type = 'P',
-                course = course.first(),
-                instructor = instructor,
-                section_number = entry['section_number']
-            )
+        course_list = get_equivalent_course_info(data['course_code'])
+        for course in course_list:
+            course = Course.objects.filter(code = course['code']).first()
+            course.l_count = data['l_count']
+            course.t_count = data['t_count']
+            course.p_count = data['p_count']
+            course.max_strength_per_l = data['max_strength_per_l']
+            course.max_strength_per_t = data['max_strength_per_t']
+            course.max_strength_per_p = data['max_strength_per_p']
+            course.ic = Instructor.objects.get(psrn_or_id = data['ic'])
+            course.save(update_fields=['l_count', 't_count', 'p_count', 'max_strength_per_l', 'max_strength_per_t', 'max_strength_per_p', 'ic'])
+
+            CourseInstructor.objects.filter(course = course).delete()
+            l = data['l']
+            t = data['t']
+            p = data['p']
+            for entry in l:
+                instructor = Instructor.objects.get(psrn_or_id = entry['psrn_or_id'])
+                CourseInstructor.objects.create(
+                    section_type = 'L',
+                    course = course,
+                    instructor = instructor,
+                    section_number = entry['section_number']
+                )
+            for entry in t:
+                instructor = Instructor.objects.get(psrn_or_id = entry['psrn_or_id'])
+                CourseInstructor.objects.create(
+                    section_type = 'T',
+                    course = course,
+                    instructor = instructor,
+                    section_number = entry['section_number']
+                )
+            for entry in p:
+                instructor = Instructor.objects.get(psrn_or_id = entry['psrn_or_id'])
+                CourseInstructor.objects.create(
+                    section_type = 'P',
+                    course = course,
+                    instructor = instructor,
+                    section_number = entry['section_number']
+                )
 
         response['error'] = False
         response['message'] = 'success'
@@ -248,21 +252,24 @@ def submit_data(request, *args, **kwargs):
         response['message'] = str(e)
     return JsonResponse(response, safe=False)
 
-# @login_required
-@csrf_exempt
+@login_required
+# @csrf_exempt
 def clear_course(request, *args, **kwargs):
     response = {}
     try:
         body_unicode = request.body.decode('utf-8')
         data = json.loads(body_unicode)
-        course = Course.objects.filter(code = data['course_code'])
-        course.update(
-            max_strength_per_l = 0,
-            max_strength_per_t = 0,
-            max_strength_per_p = 0,
-            ic = None,
-        )
-        CourseInstructor.objects.filter(course = course.first()).delete()
+
+        course_list = get_equivalent_course_info(data['course_code'])
+        for course in course_list:
+            course = Course.objects.filter(code = course['code']).first()
+            course.max_strength_per_l = 0
+            course.max_strength_per_t = 0
+            course.max_strength_per_p = 0
+            course.ic = None
+            course.save(update_fields=['max_strength_per_l', 'max_strength_per_t', 'max_strength_per_p', 'ic'])
+            CourseInstructor.objects.filter(course = course).delete()
+
         response['error'] = False
         response['message'] = 'success'
     except Exception as e:
