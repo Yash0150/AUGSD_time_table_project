@@ -57,7 +57,7 @@ def get_department_cdc_list(dept, file):
                 0 if math.isnan(df['T'][i]) else df['T'][i],
                 0 if math.isnan(df['P'][i]) else df['P'][i],
                 0 if math.isnan(df['comcode'][i]) else df['comcode'][i],
-                None if type(df['merge with'][i]) is not str else df['merge with'][i],
+                None if type(df['equivalent'][i]) is not str else df['equivalent'][i],
             ])
     return Lst
 
@@ -96,7 +96,7 @@ def get_department_elective_list(dept, file):
                 dfe['Course No'][i],
                 dfe['Course Title'][i],
                 0 if math.isnan(dfe['com code'][i]) else dfe['com code'][i],
-                None if type(dfe['merge with'][i]) is not str else dfe['merge with'][i],
+                None if type(dfe['equivalent'][i]) is not str else dfe['equivalent'][i],
             ])
 
     return Lst
