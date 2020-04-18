@@ -7,38 +7,27 @@ import numpy as np
 from pandas import ExcelWriter
 from pandas import ExcelFile
 from course_load.models import Course
+from collections import deque
 
 def get_equivalent_course_info(code):
     course_list = []
-    # Current Course
+    q = deque()
     current_course = Course.objects.filter(code = code).first()
-    course_list.append({
-        'code': current_course.code,
-        'course_type': current_course.course_type,
-    })
-    # Parent Course
-    if current_course.merge_with is not None:
-        parent_course = Course.objects.filter(code = current_course.merge_with.code).first() 
+    # Root Course
+    while current_course.merge_with is not None:
+        current_course = current_course.merge_with
+    # BFS
+    q.append(current_course)
+    while q:
+        current_course = q.popleft()
         course_list.append({
-            'code': parent_course.code,
-            'course_type': parent_course.course_type,
+            'code': current_course.code,
+            'course_type': current_course.course_type,
         })
-        # Sibling Courses
-        sibiling_course_list = parent_course.course_set.all()
-        for sibling_course in sibiling_course_list:
-            if sibling_course == current_course:
-                continue
-            course_list.append({
-                'code': sibling_course.code,
-                'course_type': sibling_course.course_type,
-            })
-    # Child Courses
-    child_course_list = current_course.course_set.all()
-    for child_course in child_course_list:
-        course_list.append({
-            'code': child_course.code,
-            'course_type': child_course.course_type,
-        })
+        # Child Courses
+        child_course_list = current_course.course_set.all()
+        for child_course in child_course_list:
+            q.append(child_course)
     return course_list
 
 def get_department_list():
