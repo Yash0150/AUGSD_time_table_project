@@ -20,7 +20,7 @@ class InitialDataFileForm(forms.ModelForm):
 class AddCourseForm(forms.ModelForm):
     class Meta:  
         model = Course  
-        fields = ['code', 'name', 'comcode', 'department', 'course_type']
+        fields = ['code', 'name', 'comcode', 'department', 'course_type', 'merge_with']
         labels = {
             'code': 'Course number',
             'name': 'Course title'
@@ -37,7 +37,7 @@ class AddInstructorForm(forms.ModelForm):
 class UpdateCourseForm(forms.ModelForm):
     class Meta:  
         model = Course  
-        fields = ['code', 'name', 'comcode', 'department', 'course_type']
+        fields = ['code', 'name', 'comcode', 'department', 'course_type', 'merge_with']
         labels = {
             'code': 'Course number',
             'name': 'Course title'

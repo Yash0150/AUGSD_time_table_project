@@ -51,6 +51,14 @@
 					<input readonly type="text" name="old_course_type" maxlength="10" class="textinput textInput form-control" required="" id="id_old_course_type">
 				</div>
 			</div>
+			<div id="div_id_old_merge_with" class="form-group">
+				<label for="id_old_merge_with">
+					Merge with
+				</label>
+				<div class="">
+					<input readonly type="text" name="old_merge_with" maxlength="10" class="textinput textInput form-control" required="" id="id_old_merge_with">
+				</div>
+			</div>
 			<input class="btn btn-dark" type="submit" value="Submit">
 		</form>
 	</div>
@@ -81,6 +89,7 @@
 				} else {
 					$("#id_old_course_type").val(data.course_type);
 				}
+				$("#id_old_merge_with").val(data.merge_with);
 			}
 		});
 	});

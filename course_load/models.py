@@ -34,7 +34,6 @@ class Instructor(models.Model):
 
 class Course(models.Model):
     code = models.CharField(max_length=20, primary_key = True)
-    # code = models.CharField(max_length=10, null = False)
     comcode = models.IntegerField()
     name = models.CharField(max_length = 100, null = False)
     l_count = models.IntegerField(default=0)
@@ -43,19 +42,17 @@ class Course(models.Model):
     max_strength_per_l = models.IntegerField(default=0)
     max_strength_per_t = models.IntegerField(default=0)
     max_strength_per_p = models.IntegerField(default=0)
-    ic = models.ForeignKey(Instructor, default=None, on_delete=models.CASCADE, null = True)
+    ic = models.ForeignKey(Instructor, default=None, on_delete=models.SET_DEFAULT, null = True)
     department = models.ForeignKey(Department, default=None, on_delete=models.CASCADE)
     COURSE_TYPES = (
         ('C', 'CDC'),
         ('E', 'Elective')
     )
     course_type = models.CharField(max_length=1, choices=COURSE_TYPES, null = False)
-
-    # class Meta:
-    #     unique_together = ['code', 'course_type']]
+    merge_with = models.ForeignKey('self', default=None, on_delete=models.SET_DEFAULT, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.code+' ('+self.name+')'
 
 class CourseInstructor(models.Model):
     SECTION_TYPES = (
