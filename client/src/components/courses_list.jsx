@@ -199,6 +199,30 @@ export default function SimpleTabs(props) {
 
 		return <Card>{coursesCardItems}</Card>;
 	};
+
+	const getEquivalentCourses = () => {
+		const courses = props.courseInfo.equivalent_course_list;
+		const coursesCardItems = courses.map((course) => {
+			return (
+				// <CardActions key={course.code}>
+				// 	<Button
+				// 		style={course.is_active ?{ fontWeight:  '900',fontSize: '1.05rem' }:{}}
+				// 		className={classes.button}
+				// 		value={course}
+				// 		onClick={(event) => handleClick(course)}
+				// 	>
+				// 		{course.code} {`(${course.name})`}
+				// 	</Button>
+				// </CardActions>
+
+				<CardActions key={course.code}>
+					{course.code}}
+				</CardActions>
+			);
+		});
+
+		return <Card>{coursesCardItems}</Card>;
+	};
 	return (
 		<div className={classes.root}>
 			<AppBar position="static">
@@ -206,6 +230,7 @@ export default function SimpleTabs(props) {
 					<Tab label="CDC" {...a11yProps(0)} />
 					<Tab label="Electives" {...a11yProps(1)} />
 					<Tab label="ADD" {...a11yProps(2)} />
+					<Tab label="Equivalent Courses" {...a11yProps(3)} />
 				</Tabs>
 			</AppBar>
 			<TabPanel value={value} index={0}>
@@ -271,6 +296,9 @@ export default function SimpleTabs(props) {
 				<Typography style={{ color: 'red', fontWeight: 'bold', marginBottom: 10 }}>
 					{extraCourseStatus}
 				</Typography>
+			</TabPanel>
+			<TabPanel value={value} index={3}>
+				{getEquivalentCourses()}
 			</TabPanel>
 		</div>
 	);
