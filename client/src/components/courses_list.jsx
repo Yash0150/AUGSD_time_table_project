@@ -201,7 +201,7 @@ export default function SimpleTabs(props) {
 	};
 
 	const getEquivalentCourses = () => {
-		const courses = props.courseInfo.equivalent_course_list;
+		const courses = props.courseInfo.equivalent_course_list || [];
 		const coursesCardItems = courses.map((course) => {
 			return (
 				// <CardActions key={course.code}>
