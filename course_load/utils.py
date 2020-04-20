@@ -65,12 +65,12 @@ def get_department_elective_list(dept, file):
         if(dfe['Disc'][i]=='B.E. (Mechanical)' or dfe['Disc'][i]=='M.E. Design Engineering' or dfe['Disc'][i]=='M.E. Mechanical Engineering'):
             Dict[dfe['Disc'][i]]='MECH'
         if(dfe['Disc'][i]=='B.E.(Chemical)' or dfe['Disc'][i]=='M.E. (Chemical)'):
-            Dict[dfe['Disc'][i]]='CHEM'
-        if(dfe['Disc'][i]=='M.Sc. (Chemistry)'):
             Dict[dfe['Disc'][i]]='CHE'
+        if(dfe['Disc'][i]=='M.Sc. (Chemistry)'):
+            Dict[dfe['Disc'][i]]='CHEM'
         if(dfe['Disc'][i]=='ENGLISH  MINOR' or dfe['Disc'][i]=='GENERAL' or dfe['Disc'][i]=='HUM' or dfe['Disc'][i]=='M. Phil. in Liberal Studies' or dfe['Disc'][i]=='PEP Minor'):
             Dict[dfe['Disc'][i]]='HUM'
-        if(dfe['Disc'][i]=='M.E. (Biotechnology )' or dfe['Disc'][i]=='M.E. Sanitation Science, Technology and Management' or dfe['Disc'][i]=='M.Sc. (Biological Science) '):
+        if(dfe['Disc'][i]=='M.E. (Biotechnology )' or dfe['Disc'][i]=='M.E. Sanitation Science, Technology and Management' or dfe['Disc'][i]=='M.Sc. (Biological Science)'):
             Dict[dfe['Disc'][i]]='BIO'
         if(dfe['Disc'][i]=='M.Sc. (Economics)' or dfe['Disc'][i]=='Minor In Finace'):
             Dict[dfe['Disc'][i]]='ECON'
@@ -80,7 +80,6 @@ def get_department_elective_list(dept, file):
             Dict[dfe['Disc'][i]]='PHY'
     Lst=[]
     for i in range(0, dfe.shape[0]):
-        # print(Dict[dfe['Disc'][i]])
         if(Dict[dfe['Disc'][i]]==dept):
             Lst.append([
                 dfe['Course No'][i],
