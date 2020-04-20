@@ -80,6 +80,7 @@ def get_department_elective_list(dept, file):
             Dict[dfe['Disc'][i]]='PHY'
     Lst=[]
     for i in range(0, dfe.shape[0]):
+        # print(Dict[dfe['Disc'][i]])
         if(Dict[dfe['Disc'][i]]==dept):
             Lst.append([
                 dfe['Course No'][i],
@@ -87,7 +88,6 @@ def get_department_elective_list(dept, file):
                 0 if math.isnan(dfe['com code'][i]) else dfe['com code'][i],
                 None if type(dfe['equivalent'][i]) is not str else dfe['equivalent'][i],
             ])
-
     return Lst
 
 def get_department_instructor_list(dept, file):
