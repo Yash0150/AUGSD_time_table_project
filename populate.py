@@ -144,8 +144,8 @@ if __name__ == '__main__':
     CourseInstructor.objects.all().delete()
     CourseAccessRequested.objects.all().delete()
 
-    # file = 'data.xlsx'
-    file = 'data_test.xlsx'
+    file = 'data.xlsx'
+    # file = 'data_test.xlsx'
     create_super_user()
     create_user_profile(file)
     create_instructor(file)
