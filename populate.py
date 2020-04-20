@@ -51,20 +51,20 @@ def create_instructor(file):
 
             department_instructor_list = get_department_instructor_list(i, file)
             for instructor in department_instructor_list:
-                # print(instructor[0], ', ', instructor[1])
                 try:
                     Instructor.objects.create(psrn_or_id = instructor[1], name = instructor[0], instructor_type = 'F', department = dept)
+                    # print('ADDED: ', instructor[1], ' [', instructor[0], ']')
                 except Exception as e:
-                    # print(instructor[0], ', ', instructor[1], " skipped as this instructor is already in db")
+                    print('SKIPPED: ', instructor[1], ' [', instructor[0], "] instructor is already in db.")
                     pass
                 
             department_phd_student_list = get_department_phd_student_list(i, file)
             for phd_student in department_phd_student_list:
-                # print(phd_student[0], ', ', phd_student[1])
                 try:
                     Instructor.objects.create(psrn_or_id = phd_student[1], name = phd_student[0], instructor_type = 'S', department = dept)
+                    # print('ADDED: ', phd_student[1], ' [', phd_student[0], ']')
                 except Exception as e:
-                    # print(instructor[0], ', ', instructor[1], " skipped as this phd scholar is already in db")
+                    print('SKIPPED: ', phd_student[1], ' [', phd_student[0], "] phd scholar is already in db.")
                     pass
 
     except Exception as e:
@@ -79,12 +79,9 @@ def create_course(file):
             dept = Department.objects.get(code = i)
             department_cdc_list = get_department_cdc_list(i, file)
             for cdc in department_cdc_list:
-                # print(cdc[0], ', ', cdc[1])
                 parent_course = None
                 if cdc[6] is not None:
                     parent_course = Course.objects.filter(code=cdc[6]).first()
-                    if parent_course is None:
-                        print('Parent course ['+cdc[6]+'] of '+cdc[1]+' ['+cdc[0]+'] not found.')
                 try:
                     Course.objects.create(
                         code = cdc[0], 
@@ -97,21 +94,21 @@ def create_course(file):
                         comcode = cdc[5], 
                         merge_with = parent_course,
                     )
+                    if cdc[6] is not None:
+                        if parent_course is None:
+                            print('NOTFOUND: ', 'Parent course ['+cdc[6]+'] of '+cdc[1]+' ['+cdc[0]+']')
+                        else:
+                            # print('FOUND: ', 'Parent course ['+cdc[6]+'] of '+cdc[1]+' ['+cdc[0]+']')
+                            pass
+                    # print('ADDED: ', cdc[0], ' [', cdc[1], ']')
                 except Exception as e:
-                    # print(cdc[0], ', ', cdc[1], " skipped: this cdc is already in db ("+str(e)+")")
+                    print('SKIPPED: ', cdc[0], ' [', cdc[1], "] cdc is already in db ("+str(e)+")")
                     pass
-                
             department_elective_list = get_department_elective_list(i, file)
             for elective in department_elective_list:
-                # print(elective[0], ', ', elective[1])
                 parent_course = None
                 if elective[3] is not None:
                     parent_course = Course.objects.filter(code=elective[3]).first()
-                    if parent_course is None:
-                        print('Parent course ['+elective[3]+'] of '+elective[1]+' ['+elective[0]+'] not found.')
-                    else:
-                        print(parent_course)
-
                 try:
                     Course.objects.create(
                         code = elective[0], 
@@ -121,8 +118,14 @@ def create_course(file):
                         comcode = elective[2],
                         merge_with = parent_course,
                     )
+                    if elective[3] is not None:
+                        if parent_course is None:
+                            print('NOTFOUND: ', 'Parent course ['+elective[3]+'] of '+elective[1]+' ['+elective[0]+']')
+                        else:
+                            print('FOUND: ', 'Parent course ['+elective[3]+'] of '+elective[1]+' ['+elective[0]+']')
+                    # print('ADDED: ', elective[0], ' [', elective[1], ']')
                 except Exception as e:
-                    # print(elective[0], ', ', elective[1], " skipped: this elective is already in db as a cdc ("+str(e)+")")
+                    print('SKIPPED: ', elective[0], ' [', elective[1], "] elective is already in db. ("+str(e)+")")
                     pass
 
     except Exception as e:
@@ -141,7 +144,8 @@ if __name__ == '__main__':
     CourseInstructor.objects.all().delete()
     CourseAccessRequested.objects.all().delete()
 
-    file = 'data.xlsx'
+    # file = 'data.xlsx'
+    file = 'data_test.xlsx'
     create_super_user()
     create_user_profile(file)
     create_instructor(file)
