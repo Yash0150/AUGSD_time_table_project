@@ -68,7 +68,7 @@ def get_department_elective_list(dept, file):
             Dict[dfe['Disc'][i]]='CHE'
         if(dfe['Disc'][i]=='M.Sc. (Chemistry)'):
             Dict[dfe['Disc'][i]]='CHEM'
-        if(dfe['Disc'][i]=='ENGLISH  MINOR' or dfe['Disc'][i]=='GENERAL' or dfe['Disc'][i]=='HUM' or dfe['Disc'][i]=='M. Phil. in Liberal Studies' or dfe['Disc'][i]=='PEP Minor'):
+        if(dfe['Disc'][i]=='ENGLISH MINOR' or dfe['Disc'][i]=='GENERAL' or dfe['Disc'][i]=='HUM' or dfe['Disc'][i]=='M. Phil. in Liberal Studies' or dfe['Disc'][i]=='PEP Minor'):
             Dict[dfe['Disc'][i]]='HUM'
         if(dfe['Disc'][i]=='M.E. (Biotechnology )' or dfe['Disc'][i]=='M.E. Sanitation Science, Technology and Management' or dfe['Disc'][i]=='M.Sc. (Biological Science)'):
             Dict[dfe['Disc'][i]]='BIO'

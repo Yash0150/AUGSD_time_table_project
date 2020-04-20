@@ -122,7 +122,8 @@ def create_course(file):
                         if parent_course is None:
                             print('NOTFOUND: ', 'Parent course ['+elective[3]+'] of '+elective[1]+' ['+elective[0]+']')
                         else:
-                            print('FOUND: ', 'Parent course ['+elective[3]+'] of '+elective[1]+' ['+elective[0]+']')
+                            # print('FOUND: ', 'Parent course ['+elective[3]+'] of '+elective[1]+' ['+elective[0]+']')
+                            pass
                     # print('ADDED: ', elective[0], ' [', elective[1], ']')
                 except Exception as e:
                     print('SKIPPED: ', elective[0], ' [', elective[1], "] elective is already in db. ("+str(e)+")")
@@ -145,7 +146,6 @@ if __name__ == '__main__':
     CourseAccessRequested.objects.all().delete()
 
     file = 'data.xlsx'
-    # file = 'data_test.xlsx'
     create_super_user()
     create_user_profile(file)
     create_instructor(file)
