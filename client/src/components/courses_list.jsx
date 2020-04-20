@@ -216,7 +216,7 @@ export default function SimpleTabs(props) {
 				// </CardActions>
 
 				<CardActions key={course.code}>
-					{course.code}}
+					{course.code}
 				</CardActions>
 			);
 		});
