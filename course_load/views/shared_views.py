@@ -2,6 +2,7 @@ import csv
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from course_load.models import Course, Instructor, CourseInstructor, CourseAccessRequested
+from course_load.utils import get_equivalent_course_info
 
 @login_required
 def download_course_wise(request):
@@ -11,14 +12,25 @@ def download_course_wise(request):
 
     writer.writerow(['Course number', 'Course title', 'Max strength per section: ', 'L', 'T', 'P'])
     writer.writerow(['PSRN/ID', 'Instructor name','', 'L', 'T', 'P', 'Role'])
-    # course_list = CourseInstructor.objects.filter().values('course').distinct()
+    printed_set = set()
     course_list = Course.objects.filter(ic__isnull = False).values('code').distinct()
     for course in course_list:
         course = Course.objects.get(code = course['code'])
         if request.user.is_superuser or course.department == request.user.userprofile.department or CourseAccessRequested.objects.filter(course = course, department = request.user.userprofile.department).exists():
+            if course.code in printed_set:
+                continue
+            equivalent_course_list = get_equivalent_course_info(course.code)
+            for i in equivalent_course_list:
+                printed_set.add(i['code'])
             writer.writerow([])
             writer.writerow([])
-            writer.writerow([course.code, course.name, '', course.max_strength_per_l, course.max_strength_per_t, course.max_strength_per_p])
+            if len(equivalent_course_list) == 1:
+                writer.writerow([course.code, course.name, '', course.max_strength_per_l, course.max_strength_per_t, course.max_strength_per_p])
+            else:
+                combined_code = equivalent_course_list[0]['code']
+                for i in range(1, len(equivalent_course_list)):
+                    combined_code = combined_code+' / '+equivalent_course_list[i]['code']
+                writer.writerow([combined_code, course.name, '', course.max_strength_per_l, course.max_strength_per_t, course.max_strength_per_p])
             writer.writerow([])
             ic = course.ic
             l_count = CourseInstructor.objects.filter(course = course, instructor = ic, section_type = 'L').count()
@@ -65,13 +77,25 @@ def download_instructor_wise(request):
         course_list_2 = list(Course.objects.filter(ic = instructor).values_list('code', flat=True).distinct())
         course_list = course_list_1 + course_list_2
         course_list = list(set(course_list))
+        printed_set = set()
         for course in course_list:
             course = Course.objects.get(code = course)
+            if course.code in printed_set:
+                continue
+            equivalent_course_list = get_equivalent_course_info(course.code)
+            for i in equivalent_course_list:
+                printed_set.add(i['code'])
             l_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'L').count()
             t_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'T').count()
             p_count = CourseInstructor.objects.filter(course = course, instructor = instructor, section_type = 'P').count()
             role = 'I'
             if course.ic == instructor:
                 role = 'IC'
-            writer.writerow([course.code, course.name, '', l_count, t_count, p_count, role])
+            if len(equivalent_course_list) == 1:
+                writer.writerow([course.code, course.name, '', l_count, t_count, p_count, role])
+            else:
+                combined_code = equivalent_course_list[0]['code']
+                for i in range(1, len(equivalent_course_list)):
+                    combined_code = combined_code+' / '+equivalent_course_list[i]['code']
+                writer.writerow([combined_code, course.name, '', l_count, t_count, p_count, role])
     return response
