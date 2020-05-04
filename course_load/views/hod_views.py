@@ -31,7 +31,8 @@ class DashboardView(generic.TemplateView):
                 department = Department.objects.get(code = dept)
                 context['comment_files'].append({
                     'name': department.name,
-                    'comment_file': department.comment_file
+                    'comment_file': department.comment_file,
+                    'comment_file_url': department.comment_file.url if department.comment_file else '',
                 })
             return render(request, self.template_name, context)
         else:
