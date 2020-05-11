@@ -1,4 +1,3 @@
-# This file contains utility functions for course_load
 
 import itertools
 import math
@@ -6,6 +5,29 @@ import pandas as pd
 import numpy as np
 from pandas import ExcelWriter
 from pandas import ExcelFile
+from course_load.models import Course
+from collections import deque
+
+def get_equivalent_course_info(code):
+    course_list = []
+    q = deque()
+    current_course = Course.objects.filter(code = code).first()
+    # Root Course
+    while current_course.merge_with is not None:
+        current_course = current_course.merge_with
+    # BFS
+    q.append(current_course)
+    while q:
+        current_course = q.popleft()
+        course_list.append({
+            'code': current_course.code,
+            'course_type': current_course.course_type,
+        })
+        # Child Courses
+        child_course_list = current_course.course_set.all()
+        for child_course in child_course_list:
+            q.append(child_course)
+    return course_list
 
 def get_department_list():
     return ['BIO', 'CHE', 'CHEM', 'CS', 'ECON', 'EEE', 'HUM', 'MATH', 'MECH', 'PHY']
@@ -23,6 +45,7 @@ def get_department_cdc_list(dept, file):
                 0 if math.isnan(df['T'][i]) else df['T'][i],
                 0 if math.isnan(df['P'][i]) else df['P'][i],
                 0 if math.isnan(df['comcode'][i]) else df['comcode'][i],
+                None if type(df['equivalent'][i]) is not str else df['equivalent'][i],
             ])
     return Lst
 
@@ -41,12 +64,12 @@ def get_department_elective_list(dept, file):
         if(dfe['Disc'][i]=='B.E. (Mechanical)' or dfe['Disc'][i]=='M.E. Design Engineering' or dfe['Disc'][i]=='M.E. Mechanical Engineering'):
             Dict[dfe['Disc'][i]]='MECH'
         if(dfe['Disc'][i]=='B.E.(Chemical)' or dfe['Disc'][i]=='M.E. (Chemical)'):
-            Dict[dfe['Disc'][i]]='CHEM'
-        if(dfe['Disc'][i]=='M.Sc. (Chemistry)'):
             Dict[dfe['Disc'][i]]='CHE'
-        if(dfe['Disc'][i]=='ENGLISH  MINOR' or dfe['Disc'][i]=='GENERAL' or dfe['Disc'][i]=='HUM' or dfe['Disc'][i]=='M. Phil. in Liberal Studies' or dfe['Disc'][i]=='PEP Minor'):
+        if(dfe['Disc'][i]=='M.Sc. (Chemistry)'):
+            Dict[dfe['Disc'][i]]='CHEM'
+        if(dfe['Disc'][i]=='ENGLISH MINOR' or dfe['Disc'][i]=='GENERAL' or dfe['Disc'][i]=='HUM' or dfe['Disc'][i]=='M. Phil. in Liberal Studies' or dfe['Disc'][i]=='PEP Minor'):
             Dict[dfe['Disc'][i]]='HUM'
-        if(dfe['Disc'][i]=='M.E. (Biotechnology )' or dfe['Disc'][i]=='M.E. Sanitation Science, Technology and Management' or dfe['Disc'][i]=='M.Sc. (Biological Science) '):
+        if(dfe['Disc'][i]=='M.E. (Biotechnology )' or dfe['Disc'][i]=='M.E. Sanitation Science, Technology and Management' or dfe['Disc'][i]=='M.Sc. (Biological Science)'):
             Dict[dfe['Disc'][i]]='BIO'
         if(dfe['Disc'][i]=='M.Sc. (Economics)' or dfe['Disc'][i]=='Minor In Finace'):
             Dict[dfe['Disc'][i]]='ECON'
@@ -57,14 +80,18 @@ def get_department_elective_list(dept, file):
     Lst=[]
     for i in range(0, dfe.shape[0]):
         if(Dict[dfe['Disc'][i]]==dept):
-            Lst.append([dfe['Course No'][i],dfe['Course Title'][i],0 if math.isnan(dfe['com code'][i]) else dfe['com code'][i]])
-
+            Lst.append([
+                dfe['Course No'][i],
+                dfe['Course Title'][i],
+                0 if math.isnan(dfe['com code'][i]) else dfe['com code'][i],
+                None if type(dfe['equivalent'][i]) is not str else dfe['equivalent'][i],
+            ])
     return Lst
 
 def get_department_instructor_list(dept, file):
     dff= pd.read_excel(file,'FACULTY')
     Lst=[]
-    for i in range(0,dfs.shape[0] ):
+    for i in range(0, dff.shape[0]):
         if(dff['discipline'][i]==dept):
             Lst.append([dff['name'][i],dff['PSRN'][i]])
     return Lst
@@ -73,17 +100,17 @@ def get_department_phd_student_list(dept, file):
     dfs= pd.read_excel(file,'RESEARCH SCHOLAR')
     Lst=[]
     if(dept=='HSS' or dept=='HUM'):
-        for i in range(0,dfs.shape[0]):
+        for i in range(0, dfs.shape[0]):
             if(dfs['discipline'][i]=='HSS' or dfs['discipline'][i]=='HUM'):
                 Lst.append([dfs['name'][i],dfs['IDNO'][i]])
     else:
-        for i in range(0,dfs.shape[0]):
+        for i in range(0, dfs.shape[0]):
             if(dfs['discipline'][i][0:3]==dept[0:3]):
-                if(dept=='CHE'):
-                    if(dfs['discipline'][i]=='CHE' or dfs['discipline'][i]=='CHEMISTRY'):
+                if(dept=='CHEM'):
+                    if(dfs['discipline'][i]=='CHEM' or dfs['discipline'][i]=='CHEMISTRY'):
                         Lst.append([dfs['name'][i],dfs['IDNO'][i]])
-                elif(dept=='CHEM'):
-                    if(dfs['discipline'][i]=='CHEM' or dfs['discipline'][i]=='CHEMICAL'):
+                elif(dept=='CHE'):
+                    if(dfs['discipline'][i]=='CHE' or dfs['discipline'][i]=='CHEMICAL'):
                         Lst.append([dfs['name'][i],dfs['IDNO'][i]])
                 else:
                     Lst.append([dfs['name'][i],dfs['IDNO'][i]])
@@ -95,4 +122,3 @@ def get_instructor_list(file):
     for i in range(0,dff.shape[0]):
         Lst.append([dff['name'][i],dff['PSRN'][i]])
     return Lst
-
