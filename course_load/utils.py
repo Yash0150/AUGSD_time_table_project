@@ -106,11 +106,11 @@ def get_department_phd_student_list(dept, file):
     else:
         for i in range(0, dfs.shape[0]):
             if(dfs['discipline'][i][0:3]==dept[0:3]):
-                if(dept=='CHEM'):
-                    if(dfs['discipline'][i]=='CHEM' or dfs['discipline'][i]=='CHEMISTRY'):
+                if(dept=='CHE'):
+                    if(dfs['discipline'][i]=='CHE' or dfs['discipline'][i]=='CHEMISTRY'):
                         Lst.append([dfs['name'][i],dfs['IDNO'][i]])
-                elif(dept=='CHE'):
-                    if(dfs['discipline'][i]=='CHE' or dfs['discipline'][i]=='CHEMICAL'):
+                elif(dept=='CHEM'):
+                    if(dfs['discipline'][i]=='CHEM' or dfs['discipline'][i]=='CHEMICAL'):
                         Lst.append([dfs['name'][i],dfs['IDNO'][i]])
                 else:
                     Lst.append([dfs['name'][i],dfs['IDNO'][i]])
